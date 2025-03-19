@@ -41,6 +41,8 @@ const EditGame = () => {
     const [description, setDescription] = useState("");
     const [thumbnail, setThumbnail] = useState('')
     const [oldThumbnail, setOldThumbnail] = useState('')
+    const [bgImage, setBgImage] = useState('')
+    const [oldBgImage, setOldBgImage] = useState('')
     const [loading, setLoading] = useState(false);
     const [formValue, setFormValue] = useState(initialValue)
 
@@ -62,12 +64,16 @@ const EditGame = () => {
         e.preventDefault();
         const formData = new FormData();
         formData.append("thumbnail", thumbnail);
+        formData.append("oldThumbnail", oldThumbnail);
+        formData.append("bgImage", bgImage);
+        formData.append("oldBgImage", oldBgImage);
+
         formData.append("name", formValue.name);
         formData.append("headLine", formValue.headLine);
         formData.append("description", description);
         formData.append("minParticipent", formValue.minParticipent);
         formData.append("maxParticipent", formValue.maxParticipent);
-        formData.append("oldThumbnail", oldThumbnail);
+        
 
         formData.append("gameTime", formValue.gameTime);
         formData.append("genre", formValue.genre);
@@ -131,6 +137,8 @@ const EditGame = () => {
 
             setDescription(gameData.description)
             setOldThumbnail(gameData.thumbnail)
+            setOldBgImage(gameData.bgImage)
+
         }
 
     }
@@ -176,6 +184,27 @@ const EditGame = () => {
                             <div className="mt-2">
                                 <p className="mb-0">old Image</p>
                                 <img src={oldThumbnail} alt="" style={{ width: "50px" }} />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="d-flex gap-2 justify-content-between align-items-top">
+                            <div className="flex-grow-1">
+                                <label htmlFor="bgImage" className="form-label">
+                                    Background Image
+                                </label>
+                                <input
+                                    type="file"
+                                    className="form-control"
+                                    id="bgImage"
+                                    accept="image/*"
+                                    onChange={(e) => setBgImage(e.target.files[0])}
+                                />
+                            </div>
+                            <div className="mt-2">
+                                <p className="mb-0">old Image</p>
+                                <img src={oldBgImage} alt="" style={{ width: "50px" }} />
                             </div>
                         </div>
                     </div>
