@@ -1,0 +1,176 @@
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import api from '../../api/api'
+import Swal from 'sweetalert2'
+
+const initialValue = {
+    total : 0,
+    page : 1,
+    totalPages: 0,
+    data: []
+}
+const EventList = () => {
+    const [event, setEvent] = useState(initialValue)
+    const [loading, setLoading] = useState(false)
+
+    const navigate = useNavigate();
+
+    const handleEdit = (id) => {
+        navigate(`/update-event/${id}`);
+    };
+    const handleDelete = async (id) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it',
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await api.delete(`/event/${id}`);
+                if (response.status === 200) {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Event removed successfully",
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    fetchEventFunc()
+                } else {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "error",
+                        title: "something went wrong. Please try again",
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            } catch (error) {
+                console.error('Error deleting blog:', error);
+                Swal.fire({
+                    position: "top-end",
+                    icon: "error",
+                    title: "something went wrong. Please try again",
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+        }
+    };
+
+    const fetchEventFunc = async () => {
+        setLoading(true)
+        try {
+            const response = await api.get(`/event`) 
+            if (response.status == 200) {
+                setEvent(response.data)
+            } 
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const formatDate = (isoString) => {
+        const date = new Date(isoString);
+        const options = { day: '2-digit', month: 'long', year: 'numeric' };
+        return date.toLocaleDateString('en-GB', options);
+    };
+    const convertTo12HourFormat = (time) => {
+        const [hours, minutes] = time.split(":");
+        return new Date(0, 0, 0, hours, minutes).toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+        });
+    };
+ 
+
+    useEffect(() => {
+        fetchEventFunc()
+    }, [])
+    return (
+        <>
+            <div className="container box-shadow-common p-3">
+                <div className="d-flex justify-content-between flex-wrap box-shadow-common-strip p-3 mb-3">
+                    <h5>Event List</h5>
+                    <Link
+                        to={'/add-new-event'}
+                        className="text-white d-inline-block mb-0 d-flex align-items-center justify-content-center px-3"
+                        style={{ backgroundColor: 'rgb(202 77 77)', border: 'none', textDecoration: "none" }}
+                    >
+                        <i className="fas fa-layer-group"></i> Add New Event
+                    </Link>
+                </div>
+
+                <div className="table-responsive">
+                <table className="table table-hover table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Image</th> 
+                            <th>Event Date</th>
+                            <th>Location</th>
+                            <th>Timing</th> 
+                            <th>Total Apply</th> 
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        {event.data.length > 0 ? (
+                            event.data.map((value) => (
+                                <tr key={value._id}>
+                                    <td><Link to={`/event/${value._id}`} className='text-decoration-none'> {value.title} </Link></td>
+                                    <td>
+                                        <img
+                                            src={value.image}
+                                            className="card-img-top"
+                                            alt="Game image"
+                                            style={{ width: "150px", objectFit: "cover" }}
+                                        />
+                                    </td> 
+                                    <td>{formatDate(value.eventDate)}</td>
+                                    <td>{value.location}</td>
+                                    <td>{convertTo12HourFormat(value.timeStart)} - {convertTo12HourFormat(value.timeEnd)}</td> 
+                                    <td>{value.count} </td> 
+                                    <td>
+                                        <div className="card-footer d-flex gap-2">
+                                            <button
+                                                className="btn btn-outline-primary btn-sm"
+                                                onClick={() => handleEdit(value._id)}
+                                            >
+                                                <i className="fas fa-edit me-1"></i>
+                                                Edit
+                                            </button>
+                                            <button
+                                                className="btn btn-outline-danger btn-sm"
+                                                onClick={() => handleDelete(value._id)}
+                                            >
+                                                <i className="fas fa-trash-alt me-1"></i>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr className="text-center">
+                                <td colSpan={6}> Oops, there is no data </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </>
+    )
+}
+
+export default EventList
