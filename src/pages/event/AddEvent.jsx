@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import api from "../../api/api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const initialValue = {
     title: "",
@@ -57,6 +57,7 @@ const AddEvent = () => {
 
     return (
         <div className="container mt-2 p-5 shadow-sm">
+            <Link to='/event-list' className="text-decoration-none sidebarcolor  text-white p-2 rounded-2"><i className="fa-solid fa-arrow-left-long"></i></Link>
             <h5 className="text-center mb-4">Add New Event</h5>
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <div className="row">
@@ -150,7 +151,7 @@ const AddEvent = () => {
                         ></textarea>
                     </div> 
                     <div className="col-12 text-end mt-4">
-                        <button type="submit" className="btn btn-primary">
+                        <button type="submit" className="btn btn-primary bg-escape">
                             Publish Event
                             {loading && (
                                 <span

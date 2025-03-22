@@ -3,7 +3,7 @@ import './Login.css';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import apiUrls from '../apiConfig.json'; // Adjust the path as necessary
+import apiUrls from '../apiConfig.json'; 
 import { url } from '../URL/Url';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -12,10 +12,13 @@ import api from '../../api/api';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault(); 
+    setLoading(true);
     try { 
       const res = await api.post("/admin/login", { email, password }); 
       setEmail('');
@@ -28,14 +31,12 @@ const Login = () => {
         return
       } 
       navigate('/')
-
-      // Show success alert
-      // Swal.fire({
-      //   title: 'Success!',
-      //   text: 'Login successful!',
-      //   icon: 'success',
-      //   confirmButtonText: 'Okay',
-      // }) 
+      Swal.fire({
+        title: 'Success!',
+        text: 'Login successful!',
+        icon: 'success',
+        confirmButtonText: 'Okay',
+      }) 
     } catch (error) {
       // Show error alert
       console.log("error", error);
@@ -47,6 +48,9 @@ const Login = () => {
         confirmButtonText: 'Okay',
       });
     }
+    finally {
+      setLoading(false); // Loader Stop
+  }
   };
 
  
@@ -54,17 +58,14 @@ const Login = () => {
 
   return (
     <>
-      <div className="wrapper-login box-shadow-common">
+      {/* <div className="wrapper-login box-shadow-common">
         <div className="loginbox">
-          {/* <img
-            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAMAAACahl6sAAAA8FBMVEX7JSX////6Hh77TU38IiL7GRn8///7T0/8GBjv///8Hh30///6EhL9gIDs///9IiH3goP9Dg30YmT49PX/BgTwg4byd3nb1+PlipHXJzP8z9D1ExXytbe+///4+fvRzdj+eXnu0NPMz9/fu8TfXWb+xcXxU1b9mZnkQ0v4MjPuMjSnXHPuyM3vISThtL30bnDfqLL1nqDrnKHmd3753t7p6/PZcXzo1t3rUFTqODzphYzknaXGboDoFRzY///gOUDDfZDv4uTcanTl5OzUcH/ZfonmICf6rKzUi5nTl6Xc8vjRpK/aJC7FvdDKq7n66utAKbomAAAD80lEQVR4nO3aa1faMBgH8KampZQMFqhMrWPiBS8T8a7omHPe5mXz+3+bFZxSRwvJ6FkePP/fK4+HF/mf9kmepLEsAAAAAAAAAAAAAAAAAAAAAAAAAAAAgDeC216PXTI9knHYQl5PXV6dzFxdTj1IYZsez78peUF7+8J1WY/rXpy2A4ebHpU2Lq6ni+wvxVbHm7AoXjgYoyvfsh3TY9MhlytJMboqa9L06NQFt25ajsiPwPT4VAXzQ2JEbiYjCZeLw3MwtjQRScIRz6NrawLqxGmNzsHYzAQkGVbnfW3f9DhHkKnz7msF4mXivVPLwdiuMD3WYXgnrxokb1FuVrwF1RxRvXumR5uOh/vqQR5Duo/EP1bPwdgx3YnLW9UJckq33MO6TpB9skG4VdAJUmxSLRJu6eRg7IxqkdhtvSDfqU7Aznu9IO+o7nod5f4EQf4P3VerSjXImyl23em3TfUMlds1nRyEG3n5qBPknO6+3TvRCbJKtUR0i4RwG2+FyjvdqGckvLGynLJ6kDLdN6v7VUTtVCuSvyb9MU79keyR3VY9UZ2Bi8QP6JTbFPJHppZoqZTJCd3F8IVQOErZIV4gPXz0Ofa8JLyE9HG5M+J5TEaOiKwOqRO3NQH18UxsHKTluNuYhPp44dvTiYd1hdYD5c4kARcP1YGnclcOPdKNyQsu+u9NyRNn9/VusfQKxq3vrIexSzVSEK54x9n/FcTG5wvZaTbKjXK50elci9jD4MHPI4fqIYol2tEKciNeNR+c+z2cxx+AIzaj/jdHtOxl9ameN0a9NFyu9WaCwjTFBYUHL8vgajhsZuIi3H7+5Ra9XSIXS/3ZqdZKvStXEuFV7CbXB0FsFuPi06uJtlYNhT+QhTtydub1hTRqSQZb3sp8QwjH/1PjvBTNxp61vDSwTC6ServkdNIyXqkvNKxmKCOd2fUvt5uJtwNPCe0VRTVphD1uoVY5P6/Uiult5DcyTaTdVD47Scy6QWRl1LrvkORrh0bBy93xcjB2T2KJ9zU/7yQorFE4U5FjvlhdRwQeic5xb7pD89stqXEAn65gfAr2DrPIwdie6UcSaH02TJc33Kn4jWxyGP9+JY+yClI3WiV8vOYkzjV6eyu7N8vwDCwULvSr2jT4bmne/Ruu0DTXOupdjx1l2Vw3743d98YZvC0vMugX+w5CUzm4yLBEukViagL2z7LMwZixXYmfSQffVzYVxJvJNsiJqSUx20mLsW1T05ZYyTbIylsJUn8rQeaMBZljbla6Xxo/mmob/XJuSlsuF/8jF/t37rOpWYuvczsrvu03zTWNlL5sAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH2/AZfgR0yptKr4AAAAAElFTkSuQmCC"
-            className="avatar"
-          /> */}
+        
           <div className='text-center'>
             <img src="/assets/img/escapelogo.webp" style={{ width: '100px', }} />
           </div>
 
-          <h1 className='text-black'>Login Here</h1>
+          
           <form onSubmit={handleLogin} className='form-wrapper-login'>
 
             <Form.Group controlId="formEmail">
@@ -89,12 +90,66 @@ const Login = () => {
               />
             </Form.Group>
             <input type="submit" value="Login" />
-            {/* <a href="#"> Lost your password</a>
-            <br />
-            <a href="#"> Don't have an account?</a> */}
+          
           </form>
         </div>
+      </div> */}
+
+
+<div className="login-container">
+  <video autoPlay loop muted className="bg-video hero-video">
+    <source src="/videos/blood.mp4" type="video/mp4" />
+  </video>
+
+  <div className="d-flex justify-content-center align-items-center min-vh-100 position-relative">
+    <div className="card shadow-lg p-4 border-0 text-white" style={{ width: '400px', borderRadius: '12px', background: 'rgba(0, 0, 0, 0.7)' }}>
+      <div className="text-center">
+        <img src="/assets/img/escapelogo.webp" style={{ width: '80px' }} alt="Logo" />
+        <h3 className="mt-3 text-white">Ad<span className='text-warning'>min</span> Login</h3>
       </div>
+
+      <form onSubmit={handleLogin} className="mt-4">
+        <Form.Group controlId="formEmail" className="mb-3">
+          <Form.Label className="fw-bold">Email</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter Email ID"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="py-2"
+          />
+        </Form.Group>
+
+        <Form.Group controlId="formPassword" className="mb-3">
+          <Form.Label className="fw-bold">Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="py-2"
+          />
+        </Form.Group>
+<div className="text-end">
+<button type="submit" className="btn btn-light  py-2 fw-bold shadow-sm bg-escape text-white"disabled={loading} style={{padding:'10px 25px',borderRadius:"30px"}}>
+{loading ? (
+        <>
+            <span className="spinner-border spinner-border-sm me-2"></span>
+            Logging in...
+        </>
+    ) : "Login"}
+        </button>
+</div>
+       
+
+        <div className="text-center mt-3">
+          <a href="#" className="text-decoration-none text-light">Welcome  <span className='text-warning'>Back !</span> </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
     </>
   );
 };

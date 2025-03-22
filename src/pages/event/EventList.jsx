@@ -101,10 +101,11 @@ const EventList = () => {
                     <h5>Event List</h5>
                     <Link
                         to={'/add-new-event'}
-                        className="text-white d-inline-block mb-0 d-flex align-items-center justify-content-center px-3"
-                        style={{ backgroundColor: 'rgb(202 77 77)', border: 'none', textDecoration: "none" }}
+                        className="text-white d-inline-block mb-0 d-flex align-items-center justify-content-center px-3 bg-escape text-decoration-none rounded-2"
+                       
                     >
-                        <i className="fas fa-layer-group"></i> Add New Event
+                        <i className="fa-solid fa-bullhorn"></i>&nbsp;
+                        Add New Event
                     </Link>
                 </div>
 
@@ -127,19 +128,20 @@ const EventList = () => {
                         {event.data.length > 0 ? (
                             event.data.map((value) => (
                                 <tr key={value._id}>
-                                    <td><Link to={`/event/${value._id}`} className='text-decoration-none'> {value.title} </Link></td>
-                                    <td>
+                                    <td><Link to={`/event/${value._id}`} className='text-decoration-none text-primary'> {value.title} </Link></td>
+                                    <td >
                                         <img
                                             src={value.image}
-                                            className="card-img-top"
+                                            className="card-img-top rounded-2"
                                             alt="Game image"
-                                            style={{ width: "150px", objectFit: "cover" }}
+                                            // style={{ width: "150px", objectFit: "cover" }}
+                                            style={{ width: "150px", objectFit: "cover", boxShadow: "5px 5px 15px rgba(0,0,0,0.3)", backgroundColor: "#FFCCCC" }}
                                         />
                                     </td> 
-                                    <td>{formatDate(value.eventDate)}</td>
-                                    <td>{value.location}</td>
-                                    <td>{convertTo12HourFormat(value.timeStart)} - {convertTo12HourFormat(value.timeEnd)}</td> 
-                                    <td>{value.count} </td> 
+                                    <td className='text-secondary'>{formatDate(value.eventDate)}</td>
+                                    <td className='text-secondary'>{value.location}</td>
+                                    <td className='text-secondary'>{convertTo12HourFormat(value.timeStart)} - {convertTo12HourFormat(value.timeEnd)}</td> 
+                                    <td className='text-secondary'>{value.count} </td> 
                                     <td>
                                         <div className="card-footer d-flex gap-2">
                                             <button

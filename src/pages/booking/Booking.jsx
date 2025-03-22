@@ -58,11 +58,11 @@ const Booking = () => {
           <i className="fas fa-layer-group"></i> Add New Holiday
         </Button> */}
         <Link to={'/create-booking'}
-          className="text-white d-inline-block text-decoration-none rounded px-3 py-1"
-          style={{ backgroundColor: 'rgb(202 77 77)', border: 'none' }}
+          className="text-white d-inline-block text-decoration-none rounded px-3 py-1 bg-escape"
+         
           onClick={handleShow}
         >
-          <i className="fas fa-layer-group"></i> Create New Booking
+          <i className="fa-solid fa-clipboard-list"></i> &nbsp; Create New Booking
         </Link>
       </div>
       <div className=" container Main-leaves-wrapper ">
@@ -75,12 +75,13 @@ const Booking = () => {
 
         >
           <Nav.Item>
-            <Nav.Link eventKey="link-2">Booking Table <i className="fa-solid fa-check"></i></Nav.Link>
-          </Nav.Item>
-          {/* <Nav.Item>
-            <Nav.Link eventKey="/home">Total Emp Leaves</Nav.Link>
+            <Nav.Link eventKey="link-2"className='' >Booking Table &nbsp;<i className="fa-solid fa-clipboard-list"></i></Nav.Link>
           </Nav.Item>
           <Nav.Item>
+            <Nav.Link eventKey="/home">Total Booking &nbsp;<i className="fa-solid fa-users"></i>
+            </Nav.Link>
+          </Nav.Item>
+          {/* <Nav.Item>
             <Nav.Link eventKey="link-1">Pending Leaves <i className="fa-solid fa-hourglass-half"></i></Nav.Link>
           </Nav.Item> */}
 
@@ -149,7 +150,7 @@ const Booking = () => {
                                   </div>
                                 )
                               }) : 
-                              <div>Null</div>
+                              <div className='text-danger'>Null</div>
                               }
                             </td>
                           ))}
@@ -168,7 +169,7 @@ const Booking = () => {
                 <div className="row p-0">
                   <div className="col-lg-3 p-0">
                     <div className="mb-3">
-                      <div className="input-group mb-3">
+                      {/* <div className="input-group mb-3">
                         <input
                           type="text"
                           className="form-control"
@@ -179,7 +180,7 @@ const Booking = () => {
                         <span className="input-group-text" id="basic-addon2">
                           <i className="fa-solid fa-magnifying-glass"></i>
                         </span>
-                      </div>
+                      </div> */}
 
 
                     </div>
@@ -192,21 +193,23 @@ const Booking = () => {
 
                 <thead className='text-center'>
                   <tr>
-                    <th>Emp Id</th>
+                    <th> Id</th>
 
                     <th>Name</th>
-                    <th>Role</th>
-                    <th>start Date</th>
-                    <th>End Date</th>
-                    <th>Total Days</th>
+                    <th>phone</th>
+                    <th>Email</th>
+                    <th>AMount</th>
+                    <th>Game</th>
+                    <th>Date of booking</th>
+               
                     <th>Email ID</th>
                     <th>Phone</th>
-                    <th>Active</th>
+                   
                     <th>#</th>
 
                   </tr>
                 </thead>
-                <tbody className='text-center'>
+                {/* <tbody className='text-center'>
                   {currentData.map((vendor) => (
                     <tr key={vendor.id}>
                       <td>{vendor.id}</td>
@@ -232,11 +235,11 @@ const Booking = () => {
                       </td>
                       <td>
                         <i className="fa-regular fa-pen-to-square"></i>&nbsp;&nbsp;
-                        {/* <i className="fa-solid fa-trash-can-arrow-up"></i> */}
+                        <i className="fa-solid fa-trash-can-arrow-up"></i>
                       </td>
                     </tr>
                   ))}
-                </tbody>
+                </tbody> */}
               </Table>
             </div>
           )}

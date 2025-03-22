@@ -71,7 +71,10 @@ const Blog = () => {
         {blog.length > 0 ? (
           blog.map((value) => (
             <div key={value._id} className="col-md-6 col-lg-4 mb-4">
-              <div className="card h-100">
+              <div className="card h-100" 
+                                            style={{ boxShadow: "5px 5px 15px rgba(0,0,0,0.3)" }}
+              
+              >
                 <img
                   src={value.image}
                   className="card-img-top"

@@ -59,8 +59,15 @@ const Sidebar = () => {
           </li>
           <li className="nav-item">
             <Link to="/booking" className={`Customnav-link ${location.pathname === "/booking" ? 'active' : ''}`}>
-            <i className="fa-solid fa-bookmark"></i>
-              <span className="Customnav-link-text">Booking</span>
+            <i className="fa-solid fa-clipboard-list"></i><span className="Customnav-link-text ms-1">Booking</span>
+            </Link> 
+          </li>
+
+          <li className="nav-item">
+            <Link to="/offer" className={`Customnav-link ${location.pathname === "/offer" ? 'active' : ''}`}>
+            <i className="fa-solid fa-percent"></i>
+
+              <span className="Customnav-link-text ms-1">Offer banner</span>
             </Link> 
           </li>
           <li className="nav-item">
@@ -82,13 +89,14 @@ const Sidebar = () => {
           <li className="nav-item">
             <Link to="/time-slot" className={`Customnav-link ${location.pathname === "/time-slot" ? 'active' : ''}`}>
              
-            <i className="fa-solid fa-calendar-days"></i>
-              <span className="Customnav-link-text">Time Slot</span>
+            <i className="fa-solid fa-clock"></i><span className="Customnav-link-text">Time Slot</span>
             </Link>
           </li>
           <li className="nav-item">
             <Link to="/bulk-booking" className={`Customnav-link ${location.pathname === "/bulk-booking" ? 'active' : ''}`}> 
-            <i className="fa-solid fa-calendar-days"></i>
+            {/* <i className="fa-solid fa-calendar-days"></i> */}
+            <i className="fa-solid fa-calendar-plus"></i>
+
               <span className="Customnav-link-text">Bulk Booking</span>
             </Link>
           </li>
@@ -97,8 +105,8 @@ const Sidebar = () => {
           <li className="nav-item">
             <div className="Customnav-link" onClick={()=>toggleDropdownFucn('event')}>
              
-            <i className="fa-solid fa-gamepad"></i>
-              <span className="Customnav-link-text">Event</span>
+            <i className="fa-solid fa-calendar-day"></i>
+              <span className="Customnav-link-text ms-1">Event</span>
               <span className="submenu-indicator">
                 {toggleDropdown.event ? <i className="fa-solid fa-angle-up"></i> : <i className="fa-solid fa-angle-down"></i>}
               </span>
@@ -112,7 +120,8 @@ const Sidebar = () => {
                 </Link>
                 <Link to="/add-new-event" className={`Customnav-link common-submenu-text ${location.pathname === "/add-new-event" ? 'active' : ''}`}>
                 {/* <i className="fas fa-file-alt"></i>  */}
-                <i className="fa-solid fa-puzzle-piece"></i>
+                <i className="fa-solid fa-bullhorn"></i>
+
                   <span className="Customnav-link-text">Add Event</span>
                 </Link>
              
@@ -138,7 +147,8 @@ const Sidebar = () => {
                 </Link>
                 <Link to="/add-new-game" className={`Customnav-link common-submenu-text ${location.pathname === "/add-new-game" ? 'active' : ''}`}>
                 {/* <i className="fas fa-file-alt"></i>  */}
-                <i className="fa-solid fa-puzzle-piece"></i>
+                <i className="fa-solid fa-chess-board"></i>
+
                   <span className="Customnav-link-text">Add Game</span>
                 </Link>
              
@@ -222,7 +232,7 @@ const Sidebar = () => {
           <li className="nav-item">
             <div className="Customnav-link" onClick={toggleWebSettingSubmenu}>
             <i className="fas fa-newspaper"></i> 
-              <span className="Customnav-link-text">Blogs</span>
+              <span className="Customnav-link-text ms-1">Blogs</span>
               <span className="submenu-indicator">
                 {isWebSettingSubmenuOpen ? <i className="fa-solid fa-angle-up"></i> : <i className="fa-solid fa-angle-down"></i>}
               </span>
@@ -234,15 +244,17 @@ const Sidebar = () => {
                   <span className="Customnav-link-text">Blog List</span>
                 </Link>
                 <Link to="/add-blog" className={`Customnav-link common-submenu-text ${location.pathname === "/add-blog" ? 'active' : ''}`}>
-                <i className="fas fa-file-alt"></i> 
+                <i className="fa-solid fa-book-open"></i>
+ 
                   <span className="Customnav-link-text">Add Blog</span>
                 </Link>
              
               </li>
+          
             </ul>
           </li>
  
-       
+    
 
           {/* Other nav items... */}
      

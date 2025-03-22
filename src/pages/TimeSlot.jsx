@@ -149,14 +149,14 @@ const TimeSlot = () => {
             <div className="d-flex justify-content-between flex-wrap box-shadow-common-strip p-3 mb-3">
                 <h5>Time Slot</h5>
                 <Button
-                    style={{ backgroundColor: 'rgb(202 77 77)', border: 'none' }}
-                    className="text-white"
+                    
+                    className="text-white bg-escape"
                     onClick={handleShow}
                 >
-                    <i className="fas fa-layer-group"></i> Add New Timing
+                     <i className="fa-solid fa-clock"></i> Add New Timing
                 </Button>
             </div>
-            <div className="table-responsive type-table-wrapper">
+            {/* <div className="table-responsive type-table-wrapper">
 
                 <table className="table table-striped table-bordered shadow-sm">
                     <thead className="text-center">
@@ -193,9 +193,57 @@ const TimeSlot = () => {
                     </tbody>
                 </table>
 
-                {/* Pagination */}
+               
 
+            </div> */}
+<div className="container mt-4">
+    <h4 className="fw-bold mb-3">Time Slots</h4>
+    <div className="row">
+        {timeSlot && timeSlot.length > 0 ? (
+            timeSlot.map((value) => (
+                <div key={value._id} className="col-lg-3 col-md-4 col-sm-6 mb-3">
+                    <div 
+                        className="card p-3 shadow-sm  text-center"
+                        style={{
+                            background: "#fff",
+                            borderRadius: "12px",
+                            transition: "0.3s ease-in-out",
+                            boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                            cursor: "pointer",
+                            border: "1px dashed #ED2224"
+                        }}
+                    >
+                        <div className="card-body">
+                            <h5 className="text-dark">
+                                <i className="fa-solid fa-stopwatch text-danger me-2"></i>
+                                {convertTo12HourFormat(value.startTime)}
+                            </h5>
+                            <div className="d-flex justify-content-center gap-3 mt-3">
+                                <button 
+                                    className="btn border-dark text-white px-4 py-2 rounded-pill"
+                                    onClick={() => handleOpenEditModelFunc(value)}
+                                >
+                                    <i className="fa-regular fa-pen-to-square text-dark "></i>
+                                </button>
+                                <button 
+                                    className="btn btn-outline-danger px-4 py-2 rounded-pill"
+                                    onClick={(e) => handleDelete(e, value._id)}
+                                >
+                                    <i className="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ))
+        ) : (
+            <div className="col-12 text-center">
+                <p className="alert alert-warning">No Time Slots Available</p>
             </div>
+        )}
+    </div>
+</div>
+
 
             {/* Edit Category Modal */}
             <Modal size="md" show={showEditModel} onHide={handleCloseEditModelFunc}>

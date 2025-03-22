@@ -41,6 +41,7 @@ import AddEvent from "./pages/event/AddEvent";
 import EventList from "./pages/event/EventList";
 import EventDetails from "./pages/event/EventDetails";
 import UpdateEvent from "./pages/event/UpdateEvent";
+import Offer from "./pages/offer/Offer";
 
 function App() {
   const {
@@ -110,6 +111,7 @@ function App() {
           
           {/* Booking route  */}
           <Route path="/booking" element={<Booking />} />
+          <Route path="/offer" element={<Offer />} />
           <Route path="/create-booking" element={<AddBooking />} />
 
           

@@ -195,7 +195,7 @@ const EditBlogs = () => {
 
                     {/* Submit Button */}
                     <div className="col-md-12 text-end">
-                        <button type="submit" className="btn btn-primary add-blogs-button">
+                        <button type="submit" className="btn btn-primary add-blogs-button bg-escape">
                             Update Blog
                             {loading && (
                                 <span

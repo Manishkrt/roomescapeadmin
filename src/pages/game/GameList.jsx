@@ -90,10 +90,11 @@ const GameList = () => {
                 <h5>Game  List</h5>
                 <Link
                     to={'/add-new-game'}
-                    style={{ backgroundColor: 'rgb(202 77 77)', border: 'none', textDecoration: "none" }}
-                    className="text-white d-inline-block"
+                    
+                    className="text-white d-inline-block mb-0 d-flex align-items-center justify-content-center px-3 bg-escape text-decoration-none rounded-2"
                 >
-                    <i className="fas fa-layer-group"></i> Add New Game
+                    <i className="fa-solid fa-chess-board"></i> &nbsp;
+                    Add New Game
                 </Link>
             </div>
 
@@ -118,7 +119,7 @@ const GameList = () => {
                                     <td>
                                         <img
                                             src={value.thumbnail}
-                                            className="card-img-top"
+                                            className="card-img-top rounded-2"
                                             alt="Game image"
                                             style={{ height: "70px", objectFit: "cover" }}
                                         />

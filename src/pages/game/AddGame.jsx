@@ -383,7 +383,7 @@ const AddGame = () => {
                 </div>
 
                 <div className="text-end mt-4">
-                    <button type="submit" className="btn btn-primary" disabled={loading}>
+                    <button type="submit" className="btn btn-primary bg-escape" disabled={loading}>
                         {loading ? "Uploading" : "Submit"}
                         {loading && (
                             <span

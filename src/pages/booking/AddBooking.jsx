@@ -9,7 +9,7 @@ import TextEditor from "../../components/TextEditor";
 import api from "../../api/api";
 import { useGame } from "../../customHook/customHook";
 import CustomTimeSlotDropdown from "../../components/CustomTimeSlotDropdown";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const initialValue = {
     game: "",
@@ -178,7 +178,10 @@ const AddBooking = () => {
     }, [formValue.bookingDate, formValue.numberOfPeople])
     return (
         <div className="container mt-2 box-shadow-common p-5 add-blogwrapper">
+                        <Link to='/booking' className="text-decoration-none sidebarcolor  text-white p-2 rounded-2"><i className="fa-solid fa-arrow-left-long"></i></Link>
+
             <h5 className="text-center mb-4">Create New Booking</h5>
+            
             <form onSubmit={handleSubmit}>
                 <div className="row">
                     {/* Title */}

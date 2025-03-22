@@ -1,6 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Fjalla+One&display=swap');
+
 /* sidebar */
+body {
+  /* font-family: var(--font-family-bai); */
+  font-family: "Averia Serif Libre" !important;
+
+}
 .sidebar {
-    background-color: rgb(41 88 121);;
+    background-color: #200000;
+
     width: 260px;
     padding: 36px 20px;
     transition: var(--transition-default);
@@ -76,8 +84,8 @@
   }
   .Customnav-link:hover {
     /* border: 1px solid var(--clr-primar-light); */
-    background-color: white;
-    color: black;
+    /* background-color: white; */
+    color: #ED2224;
   }
   .Customnav-link.active {
     /* background-color: var(--clr-pumpkin); */
@@ -158,9 +166,9 @@
     }
   }
   .Customnav-link.active {
-    color: #3487c7 !important; /* Change to your desired highlight color */
+    color: white !important; /* Change to your desired highlight color */
     font-weight: bold;
-    background-color: white;
+    background-color: #ED2224;
    font-family: "Rubik";
     /* Add any other styles to highlight the active item */
   }

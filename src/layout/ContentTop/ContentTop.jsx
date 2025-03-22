@@ -36,14 +36,7 @@ const ContentTop = () => {
           <Dropdown.Toggle id="dropdown-basic" style={{ backgroundColor: "white", border: 'none' }}>
             <img src="https://th.bing.com/th/id/OIP.CNIPJOPWQ1tiTLX1WxEx3QHaH_?w=179&h=193&c=7&r=0&o=5&dpr=1.1&pid=1.7" id="dropdown-basic" style={{ width: '44px', height: '44px', borderRadius: "50%" }} />
           </Dropdown.Toggle>
-          <button type="button" className="btn btn-primary position-relative me-3">
-            <i className="fa-solid fa-bell"></i>
-            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              5+
-              <span className="visually-hidden">unread messages</span>
-            </span>
-
-          </button>
+         
           <Dropdown.Menu>
             <Dropdown.Item as="div">
               <Link to={`/profile`} className="text-decoration-none text-dark">

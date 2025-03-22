@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { usePublicHoliday } from "../customHook/customHook";
 import { url } from '../components/URL/Url';
 import api from '../api/api';
+import { Card } from 'react-bootstrap';
 
 
 
@@ -140,16 +141,28 @@ const PublicHoliday = () => {
   }; 
   return (
     <>
-      <div className="d-flex justify-content-between flex-wrap box-shadow-common-strip p-3 mb-3">
-        <h5>Public Holidays</h5>
+      <div className="d-flex justify-content-between align-items-center flex-wrap box-shadow-common-strip p-3 mb-3">
+       
+        {/* <h5>Public Holidays </h5> */}
+        <div>
+        <p className=''>
+<i className="fas fa-user-tag fs-8  bg-primary text-white p-3 rounded-2" style={{ transform: "rotate(5deg)" }}></i>&nbsp;
+Public Holidays 
+</p>
+        </div>
+        <div>
         <Button
-          style={{ backgroundColor: 'rgb(202 77 77)', border: 'none' }}
-          className="text-white"
-          onClick={handleShow}
-        >
-          <i className="fas fa-layer-group"></i> Add New Holiday
-        </Button>
+         
+         className="text-white bg-escape"
+         onClick={handleShow}
+       >
+          <i className="fa-solid fa-snowman"></i> Add New Holiday
+       </Button>
+        </div>
+
+      
       </div>
+  
       <div className="table-responsive type-table-wrapper">
 
         <table className="table table-striped table-bordered shadow-sm">

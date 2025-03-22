@@ -7,15 +7,16 @@ import { SidebarContext } from "../../context/sidebarContext";
 
 const ContentMain = () => {
         const {blogs, setBlogs} = useContext(SidebarContext);  
+    
   return (
     <>
       {/* Dashboard Cards */}
       <div className="container Home-total-card-box" >
         <div className="row">
-          {/* Total Property */}
-          <div className="col-lg-4 mb-4">
+         
+          {/* <div className="col-lg-3 col-md-6 col-sm-12 mb-4">
             <Card style={cardStyle("light")}>
-              <Card.Body className="d-flex flex-column align-items-center">
+              <Card.Body className="d-flex flex-column align-items-center p-0">
                 <Card.Title>
                   <div style={circleIconStyle}>
                     <i className="fas fa-building fs-3" style={iconStyle}></i>
@@ -26,78 +27,172 @@ const ContentMain = () => {
             </Card>
           </div>
 
-          {/* Pending Property */}
-          {/* <div className="col-lg-4 mb-4">
+         
+          <div className="col-lg-6 col-md-6 col-sm-12 mb-4">
             <Card style={cardStyle("warning")}>
-              <Card.Body className="d-flex flex-column align-items-center">
+              <Card.Body className="d-flex flex-column align-items-center p-0">
                 <Card.Title>
                   <div style={circleIconStyle}>
                     <i className="fas fa-clock fs-3" style={iconStyle}></i>
                   </div>
                 </Card.Title>
-                <Card.Title className="fs-6" style={cardTitleStyle}>Pending Properties (5)</Card.Title>
+                <Card.Title className="fs-6" style={cardTitleStyle}> Total Games (5)</Card.Title>
               </Card.Body>
             </Card>
-          </div> */}
+          </div>
 
-          {/* Approved Property */}
-          {/* <div className="col-lg-4 mb-4">
+          
+          <div className="col-lg-3 col-md-6 col-sm-12 mb-4">
             <Card style={cardStyle("success")}>
-              <Card.Body className="d-flex flex-column align-items-center">
+              <Card.Body className="d-flex flex-column align-items-center p-0">
                 <Card.Title>
                   <div style={circleIconStyle}>
                     <i className="fas fa-check-circle fs-3" style={iconStyle}></i>
                   </div>
                 </Card.Title>
-                <Card.Title className="fs-6" style={cardTitleStyle}>Approved Properties (10)</Card.Title>
+                <Card.Title className="fs-6" style={cardTitleStyle}>Total Events (10)</Card.Title>
               </Card.Body>
             </Card>
-          </div> */}
+          </div>
 
-          {/* Total Leads */}
-          {/* <div className="col-lg-4 mb-4">
+         
+          <div className="col-lg-4 col-md-6 col-sm-12 mb-4">
             <Card style={cardStyle("info")}>
-              <Card.Body className="d-flex flex-column align-items-center">
+              <Card.Body className="d-flex flex-column align-items-center p-0">
                 <Card.Title>
                   <div style={circleIconStyle}>
                     <i className="fas fa-users fs-3" style={iconStyle}></i>
                   </div>
                 </Card.Title>
-                <Card.Title className="fs-6" style={cardTitleStyle}>Total Leads (10)</Card.Title>
+                <Card.Title className="fs-6" style={cardTitleStyle}>Total Booking (10)</Card.Title>
               </Card.Body>
             </Card>
-          </div> */}
+          </div>
 
-          {/* Total Blogs */}
-          {/* <div className="col-lg-4 mb-4">
+         
+          <div className="col-lg-3 col-md-6 col-sm-12 mb-4">
             <Card style={cardStyle("danger")}>
-              <Card.Body className="d-flex flex-column align-items-center">
+              <Card.Body className="d-flex flex-column align-items-center p-0">
                 <Card.Title>
                   <div style={circleIconStyle}>
                     <i className="fas fa-newspaper fs-3" style={iconStyle}></i>
                   </div>
                 </Card.Title> 
                 <Card.Title className="fs-6" style={cardTitleStyle}>
-  Total Blogs {blogs && blogs.length > 0 ? blogs.length : "Oops"}
+  Total Blogs {blogs && blogs.length > 0 ? blogs.length : "5"}
 </Card.Title>
               </Card.Body>
             </Card>
-          </div> */}
+          </div>
 
-          {/* Property Seller */}
-          {/* <div className="col-lg-4 mb-4">
+          
+          <div className="col-lg-5 col-md-6 col-sm-12 mb-4">
             <Card style={cardStyle("primary")}>
-              <Card.Body className="d-flex flex-column align-items-center">
+              <Card.Body className="d-flex flex-column align-items-center p-0">
                 <Card.Title>
                   <div style={circleIconStyle}>
                     <i className="fas fa-user-tag fs-3" style={iconStyle}></i>
                   </div>
                 </Card.Title>
-                <Card.Title className="fs-6" style={cardTitleStyle}>Property Sellers (10)</Card.Title>
+                <Card.Title className="fs-6" style={cardTitleStyle}>Public Holiday(10)</Card.Title>
               </Card.Body>
             </Card>
           </div> */}
           
+
+
+
+          <div className="col-lg-3 col-md-6 col-sm-12 mb-4">
+  <Card className="border-0 shadow-sm" style={{ borderRadius: "40px 0 40px 0", borderTop: "5px solid green" }}>
+    <Card.Body className="d-flex flex-column align-items-center p-3">
+      <Card.Title>
+        <div className="d-flex justify-content-center align-items-center bg-success text-white rounded-circle p-3">
+          <i className="fas fa-building fs-3"></i>
+        </div>
+      </Card.Title>
+      <Card.Title className="fs-6">Total Visitors (10)</Card.Title>
+    </Card.Body>
+  </Card>
+</div>
+
+<div className="col-lg-6 col-md-6 col-sm-12 mb-4">
+  <Card className="border-0 shadow-sm" style={{ clipPath: "polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%)", backgroundColor: "#FFEECC" }}>
+    <Card.Body className="d-flex flex-column align-items-center p-3">
+      <Card.Title>
+        <div className="d-flex justify-content-center align-items-center bg-warning text-dark rounded-3 p-3">
+          <i className="fas fa-clock fs-3"></i>
+        </div>
+      </Card.Title>
+      <Card.Title className="fs-6">Total Games (5)</Card.Title>
+    </Card.Body>
+  </Card>
+</div>
+
+<div className="col-lg-3 col-md-6 col-sm-12 mb-4">
+  <Card className="border-0 shadow-sm" style={{ borderRadius: "0 40px 0 40px", borderTop: "5px solid green" }}>
+    <Card.Body className="d-flex flex-column align-items-center p-3">
+      <Card.Title>
+        <div className="d-flex justify-content-center align-items-center bg-success text-white rounded-circle p-3" style={{ transform: "rotate(-10deg)" }}>
+          <i className="fas fa-check-circle fs-3"></i>
+        </div>
+      </Card.Title>
+      <Card.Title className="fs-6">Total Events (10)</Card.Title>
+    </Card.Body>
+  </Card>
+</div>
+
+<div className="col-lg-4 col-md-6 col-sm-12 mb-4">
+  <Card className="border-0 shadow-sm" style={{ borderRadius: "10px 50px 10px 50px", borderBottom: "5px solid blue" }}>
+    <Card.Body className="d-flex flex-column align-items-center p-3">
+      <Card.Title>
+        <div className="d-flex justify-content-center align-items-center bg-info text-white border border-white p-3">
+          <i className="fas fa-users fs-3"></i>
+        </div>
+      </Card.Title>
+      <Card.Title className="fs-6">Total Booking (10)</Card.Title>
+    </Card.Body>
+  </Card>
+</div>
+
+<div className="col-lg-3 col-md-6 col-sm-12 mb-4">
+  <Card className="border-0 shadow-sm" style={{ clipPath: "polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%)", boxShadow: "5px 5px 15px rgba(0,0,0,0.3)", backgroundColor: "#FFCCCC" }}>
+    <Card.Body className="d-flex flex-column align-items-center p-3">
+      <Card.Title>
+        <div className="d-flex justify-content-center align-items-center bg-danger text-white rounded-3 p-3">
+          <i className="fas fa-newspaper fs-3"></i>
+        </div>
+      </Card.Title>
+      <Card.Title className="fs-6">Total Blogs {blogs && blogs.length > 0 ? blogs.length : "5"}</Card.Title>
+    </Card.Body>
+  </Card>
+</div>
+
+<div className="col-lg-5 col-md-6 col-sm-12 mb-4">
+  <Card className="border-0 shadow-sm" style={{ borderRadius: "0 60px 60px 0", borderLeft: "5px solid #007bff" }}>
+    <Card.Body className="d-flex flex-column align-items-center p-3">
+      <Card.Title>
+        <div className="d-flex justify-content-center align-items-center bg-primary text-white p-3" style={{ transform: "rotate(5deg)" }}>
+          <i className="fas fa-user-tag fs-3"></i>
+        </div>
+      </Card.Title>
+      <Card.Title className="fs-6">Public Holiday (10)</Card.Title>
+    </Card.Body>
+  </Card>
+</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
         </div>
       </div>
     </>
