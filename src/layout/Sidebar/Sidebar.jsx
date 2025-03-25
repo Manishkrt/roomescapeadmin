@@ -155,6 +155,66 @@ const Sidebar = () => {
               </li>
             </ul>
           </li>
+
+
+          {/* Block game dropdown */}
+          <li className="nav-item">
+            <div className="Customnav-link" onClick={()=>toggleDropdownFucn('gameReview')}>
+             
+            <i className="fa-solid fa-gamepad"></i>
+              <span className="Customnav-link-text">Game Review</span>
+              <span className="submenu-indicator">
+                {toggleDropdown.gameReview ? <i className="fa-solid fa-angle-up"></i> : <i className="fa-solid fa-angle-down"></i>}
+              </span>
+            </div>
+            <ul className={`submenu ${toggleDropdown.gameReview ? 'open' : ''}`}> 
+              <li className="nav-item">
+                <Link to="/game-review" className={`Customnav-link common-submenu-text ${location.pathname === "/game-review" ? 'active' : ''}`}>
+                {/* <i className="fas fa-file-alt"></i>  */}
+                <i className="fa-solid fa-file-signature"></i>
+                  <span className="Customnav-link-text"> Game Review List</span>
+                </Link>
+                <Link to="/add-game-review" className={`Customnav-link common-submenu-text ${location.pathname === "/add-game-review" ? 'active' : ''}`}>
+                {/* <i className="fas fa-file-alt"></i>  */}
+                <i className="fa-solid fa-chess-board"></i>
+
+                  <span className="Customnav-link-text">Add Game Review</span>
+                </Link>
+             
+              </li>
+            </ul>
+          </li>
+
+
+          {/* Block game dropdown */}
+          <li className="nav-item">
+            <div className="Customnav-link" onClick={()=>toggleDropdownFucn('blockedGame')}>
+             
+            <i className="fa-solid fa-gamepad"></i>
+              <span className="Customnav-link-text">Blocked Games By Date</span>
+              <span className="submenu-indicator">
+                {toggleDropdown.blockedGame ? <i className="fa-solid fa-angle-up"></i> : <i className="fa-solid fa-angle-down"></i>}
+              </span>
+            </div>
+            <ul className={`submenu ${toggleDropdown.blockedGame ? 'open' : ''}`}> 
+              <li className="nav-item">
+                <Link to="/block-game-list" className={`Customnav-link common-submenu-text ${location.pathname === "/block-game-list" ? 'active' : ''}`}>
+                {/* <i className="fas fa-file-alt"></i>  */}
+                <i className="fa-solid fa-file-signature"></i>
+                  <span className="Customnav-link-text">Blocked Game List</span>
+                </Link>
+                <Link to="/add-block-game" className={`Customnav-link common-submenu-text ${location.pathname === "/add-block-game" ? 'active' : ''}`}>
+                {/* <i className="fas fa-file-alt"></i>  */}
+                <i className="fa-solid fa-chess-board"></i>
+
+                  <span className="Customnav-link-text">Add Blocked Game</span>
+                </Link>
+             
+              </li>
+            </ul>
+          </li>
+
+
            {/* Pricing dropdown */}
           <li className="nav-item">
             <div className="Customnav-link" onClick={()=>toggleDropdownFucn('pricing')}>

@@ -55,12 +55,12 @@ const AddBooking = () => {
         setTimeSlotErr('')
         if (!formValue.timeSlot) {
             return setTimeSlotErr('Choose a Time Slot')
-        }  
+        }
         const BookingData = { ...formValue, timeSlotId: selectedTimeSlot, totalPrice: priceData.totalPrice, finalPrice: priceData.finalPrice, discountPrice: priceData.discountAmount }
-  
+
         setLoading(true);
         try {
-            const response = await api.post(`/booking/booking-by-admin`, BookingData); 
+            const response = await api.post(`/booking/booking-by-admin`, BookingData);
             if (response.status === 201) {
                 Swal.fire({
                     position: "top-end",
@@ -69,7 +69,7 @@ const AddBooking = () => {
                     showConfirmButton: false,
                     timer: 1500
                 })
-                setFormValue(initialValue) 
+                setFormValue(initialValue)
                 navigate('/booking')
             } else {
                 Swal.fire({
@@ -100,7 +100,7 @@ const AddBooking = () => {
 
             if (!response.status == 200) {
                 return
-            } 
+            }
             setAvailableSlot(response.data.availableSlots)
         }
     }
@@ -109,7 +109,7 @@ const AddBooking = () => {
             const response = await api.post('/booking/chek-price', { numberOfPeople: formValue.numberOfPeople, bookingDate: formValue.bookingDate, couponCode })
             if (!response.status == 200) {
                 return
-            } 
+            }
             setPriceData(response.data)
         }
         else {
@@ -129,13 +129,10 @@ const AddBooking = () => {
         const response = await api.post('/booking/chek-price', { numberOfPeople: formValue.numberOfPeople, bookingDate: formValue.bookingDate, couponCode: formValue.couponCode })
         if (!response.status == 200) {
             return
-        } 
+        }
         setCouponMessage(response.data.message)
         setPriceData(response.data)
     }
-
-
-
 
     const setSelectedGameFunc = () => {
         if (game && formValue.game) {
@@ -178,10 +175,10 @@ const AddBooking = () => {
     }, [formValue.bookingDate, formValue.numberOfPeople])
     return (
         <div className="container mt-2 box-shadow-common p-5 add-blogwrapper">
-                        <Link to='/booking' className="text-decoration-none sidebarcolor  text-white p-2 rounded-2"><i className="fa-solid fa-arrow-left-long"></i></Link>
+            <Link to='/booking' className="text-decoration-none sidebarcolor  text-white p-2 rounded-2"><i className="fa-solid fa-arrow-left-long"></i></Link>
 
             <h5 className="text-center mb-4">Create New Booking</h5>
-            
+
             <form onSubmit={handleSubmit}>
                 <div className="row">
                     {/* Title */}
@@ -312,7 +309,7 @@ const AddBooking = () => {
                     </div>
 
 
-                    <div className="col-12"> 
+                    <div className="col-12">
                         <div className="row">
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="couponCode" className="form-label">
@@ -339,13 +336,13 @@ const AddBooking = () => {
                                 </div>
                             </div>
 
-                        </div> 
+                        </div>
 
-                    </div> 
+                    </div>
 
                     {priceData ?
                         <div className="d-flex justify-content-end mb-4">
-                            <div> 
+                            <div>
                                 {priceData.totalPrice - priceData.finalPrice ?
                                     <div className="mb-1">
                                         <span className="fw-bold text-muted"> Price : </span>

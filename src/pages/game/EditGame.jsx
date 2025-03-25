@@ -24,6 +24,7 @@ const initialValue = {
     difficulty: 50,
     frustration: 50,
     screwUp: 50,
+    totalCustomer: 0
 }
 const reviewInitialValue = {
     name: "",
@@ -46,18 +47,18 @@ const EditGame = () => {
     const [loading, setLoading] = useState(false);
     const [formValue, setFormValue] = useState(initialValue)
 
-    const [reviewFormValue, setReviewFormValue] = useState(reviewInitialValue)
+    // const [reviewFormValue, setReviewFormValue] = useState(reviewInitialValue)
 
     const formHandle = (e) => {
         const name = e.target.name;
         const value = e.target.value
         setFormValue({ ...formValue, [name]: value })
     }
-    const reviewFormHandle = (e) => {
-        const name = e.target.name;
-        const value = e.target.value
-        setReviewFormValue({ ...reviewFormValue, [name]: value })
-    }
+    // const reviewFormHandle = (e) => {
+    //     const name = e.target.name;
+    //     const value = e.target.value
+    //     setReviewFormValue({ ...reviewFormValue, [name]: value })
+    // }
 
 
     const handleSubmit = async (e) => {
@@ -82,7 +83,7 @@ const EditGame = () => {
         formData.append("frustration", formValue.frustration);
         formData.append("screwUp", formValue.screwUp);
 
-        formData.append("review", JSON.stringify(reviewFormValue));
+        // formData.append("review", JSON.stringify(reviewFormValue));
 
         setLoading(true);
         try {
@@ -98,13 +99,11 @@ const EditGame = () => {
                     timer: 1500
                 })
                 navigate('/game-list')
-                setFormValue(initialValue)
-                setReviewFormValue(reviewInitialValue)
+                setFormValue(initialValue) 
                 setThumbnail('')
                 setDescription('')
                 getGameFunc()
-            } else {
-                // Show error alert
+            } else { 
                 Swal.fire({
                     position: "top-end",
                     icon: "error",
@@ -133,7 +132,7 @@ const EditGame = () => {
         if (id) {
             const gameData = game.find(d => d._id == id) 
             setFormValue({ ...gameData })
-            setReviewFormValue(gameData.review || reviewInitialValue)
+            // setReviewFormValue(gameData.review || reviewInitialValue)
 
             setDescription(gameData.description)
             setOldThumbnail(gameData.thumbnail)
@@ -298,6 +297,22 @@ const EditGame = () => {
                         />
                     </div>
 
+                    <div className="col-md-6">
+                        <label htmlFor="totalCustomer" className="form-label">
+                            Total Customer
+                        </label>
+                        <input
+                            type="Number"
+                            className="form-control"
+                            id="totalCustomer"
+                            name="totalCustomer"
+                            value={formValue.totalCustomer}
+                            onChange={formHandle}
+                            required
+                        />
+                    </div>
+
+
 
                     <div className="col-md-6">
                         <label htmlFor="difficulty" className="form-label fw-bold mb-0">
@@ -365,7 +380,7 @@ const EditGame = () => {
                     </div>
 
 
-                    <h4 className="col-12 mb-3">Review Section</h4>
+                    {/* <h4 className="col-12 mb-3">Review Section</h4>
                     <div className="col-md-6">
                         <label htmlFor="name" className="form-label">
                             Customer Name
@@ -428,7 +443,7 @@ const EditGame = () => {
                             onChange={reviewFormHandle}
                             required
                         />
-                    </div>
+                    </div> */}
 
 
 

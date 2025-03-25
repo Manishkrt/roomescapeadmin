@@ -1,20 +1,111 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal, Form, Table } from 'react-bootstrap';
+import { ClipLoader } from "react-spinners";
+import api from '../../api/api';
+import Swal from 'sweetalert2';
 
 const Offer = () => {
-    const [show, setShow] = useState(false);
-    const [offers, setOffers] = useState([
-        { id: 1, offerImage: "offer1.jpg", discount: "10%" },
-        { id: 2, offerImage: "offer2.jpg", discount: "20%" }
-    ]);
+    const [show, setShow] = useState(false); 
+    const [offerBanners, setOfferBanner] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [image, setImage] = useState()
+    const [errMsg, setErrMsg] = useState("")
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    // Handle Delete
-    const handleDelete = (id) => {
-        setOffers(offers.filter(offer => offer.id !== id));
-    };
+
+     
+
+    const fileHandle = (e)=>{
+        setErrMsg("")
+        setImage(e.target.files[0])
+    }
+
+    const fetchBanner = async()=>{
+        try {
+            const response = await api.get('/offer-banner')
+            if(response.status == 200){
+                setOfferBanner(response.data)
+            } 
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    const handleSubmit = async () => {
+        setLoading(true) 
+        setErrMsg("") 
+        if(!image){
+            return setErrMsg("Choose an Image. Input field can not be empty")
+        } 
+        try {
+            const formData = new FormData();
+            formData.append("image", image);
+            const response = await api.post('/offer-banner/add', formData)
+            if(response.status == 201){
+                handleClose()
+                setImage()
+                fetchBanner()
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Offer Banner Added successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+
+            }
+        } catch (error) {
+            console.log(error); 
+        } finally {
+            setLoading(false)
+        }
+
+    }
+
+    const removerBanner = async (id)=>{
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+          }).then(async(result) => {
+            if (result.isConfirmed) {
+
+                try {
+                    const response = await api.delete(`/offer-banner/${id}`)
+                    console.log("response", response);
+                    fetchBanner()
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Offer Banner removed successfully",
+                        showConfirmButton: false,
+                        timer: 1500
+                      });
+                    
+                } catch (error) {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "error",
+                        title: "Something went wrong",
+                        showConfirmButton: false,
+                        timer: 1500
+                      });
+                    console.log(error); 
+                } 
+            }
+          });  
+    }
+
+    useEffect(()=>{
+        fetchBanner()
+    }, [])
 
     return (
         <>
@@ -32,22 +123,24 @@ const Offer = () => {
                     <tr>
                         <th>#</th>
                         <th>Offer Banner</th>
-                        <th>Discount</th>
+                        {/* <th>Discount</th> */}
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {offers.map((offer, index) => (
-                        <tr key={offer.id}>
+                    {offerBanners.map((value, index) => (
+                        <tr key={value._id}>
                             <td>{index + 1}</td>
-                            <td>{offer.offerImage}</td>
-                            <td>{offer.discount}</td>
+                            {/* <td>{value.imageUrl}</td>  */}
+                            <td>
+                                <img src={value.imageUrl} alt={value.imageUrl} width={200}/>
+                            </td>
                             <td>
                                 {/* <Button variant="warning" size="sm">
                                     <i className="fa-solid fa-edit"></i>
                                 </Button>
                                 &nbsp; */}
-                                <Button variant="danger" size="sm" onClick={() => handleDelete(offer.id)}>
+                                <Button variant="danger" size="sm" onClick={() => removerBanner(value._id)}>
                                     <i className="fa-solid fa-trash"></i>
                                 </Button>
                             </td>
@@ -62,16 +155,18 @@ const Offer = () => {
                     <Modal.Title>Generate New Coupon Code</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    {errMsg && <p className='text-danger'>{errMsg}</p>}
+                    
                     <Form>
                         <Form.Group controlId="offerImage" className="mb-3">
-                            <Form.Label>Offer Banner <span className='text-danger'>*</span></Form.Label>
-                            <Form.Control type="file" name="offerImage" accept="image/*" className='border-dark' />
+                            <Form.Label>Offer Banner <span className='text-danger'>*</span> <small className='fw-light text-secondary'>(Image size should be 800px x 600px)</small></Form.Label>
+                            <Form.Control type="file" name="offerImage" accept="image/*" onChange={fileHandle} className='border-dark' />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" className='btn-danger'>
-                        Submit
+                    <Button variant="primary" className='btn-danger' onClick={handleSubmit}>
+                        Submit <ClipLoader color="#fff" size={16} loading={loading} /> 
                     </Button>
                 </Modal.Footer>
             </Modal>

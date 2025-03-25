@@ -23,6 +23,8 @@ const initialValue = {
     difficulty: 50,
     frustration: 50,
     screwUp: 50,
+    totalCustomer : 500,
+    headLine : ""
 }
 
 const reviewInitialValue = {
@@ -40,6 +42,7 @@ const AddGame = () => {
 
     const [description, setDescription] = useState("");
     const [thumbnail, setThumbnail] = useState('')
+    const [bgImage, setBgImage] = useState('')
     const [formValue, setFormValue] = useState(initialValue)
     const [reviewFormValue, setReviewFormValue] = useState(reviewInitialValue)
 
@@ -62,6 +65,7 @@ const AddGame = () => {
 
         const formData = new FormData();
         formData.append("thumbnail", thumbnail);
+        formData.append("bgImage", bgImage);
         formData.append("name", formValue.name);
         formData.append("description", description);
         formData.append("maxParticipent", formValue.maxParticipent);
@@ -73,8 +77,9 @@ const AddGame = () => {
         formData.append("difficulty", formValue.difficulty);
         formData.append("frustration", formValue.frustration);
         formData.append("screwUp", formValue.screwUp);
+        formData.append("headLine", formValue.headLine);
 
-        formData.append("review", JSON.stringify(reviewFormValue));
+        // formData.append("review", JSON.stringify(reviewFormValue));
 
         setLoading(true);
         try {
@@ -154,6 +159,42 @@ const AddGame = () => {
                     </div>
 
                     <div className="col-md-6">
+                        <div className="d-flex gap-2 justify-content-between align-items-top">
+                            <div className="flex-grow-1">
+                                <label htmlFor="bgImage" className="form-label">
+                                    Background Image
+                                </label>
+                                <input
+                                    type="file"
+                                    className="form-control"
+                                    id="bgImage"
+                                    accept="image/*"
+                                    onChange={(e) => setBgImage(e.target.files[0])}
+                                />
+                            </div>
+                            {/* <div className="mt-2">
+                                <p className="mb-0">old Image</p>
+                                <img src={oldBgImage} alt="" style={{ width: "50px" }} />
+                            </div> */}
+                        </div>
+                    </div>
+
+                    <div className="col-md-6">
+                        <label htmlFor="headLine" className="form-label">
+                            Head Line
+                        </label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="headLine"
+                            name="headLine"
+                            value={formValue.headLine}
+                            onChange={(e) => formHandle(e)}
+                            required
+                        />
+                    </div>
+
+                    <div className="col-md-3">
                         <label htmlFor="maxParticipent" className="form-label">
                             Minimum Participent
                         </label>
@@ -168,7 +209,7 @@ const AddGame = () => {
                         />
                     </div>
 
-                    <div className="col-md-6">
+                    <div className="col-md-3">
                         <label htmlFor="maxParticipent" className="form-label">
                             Maximum Participent
                         </label>
@@ -228,6 +269,22 @@ const AddGame = () => {
                             required
                         />
                     </div>
+
+                    <div className="col-md-6">
+                        <label htmlFor="totalCustomer" className="form-label">
+                            Total Customer
+                        </label>
+                        <input
+                            type="Number"
+                            className="form-control"
+                            id="totalCustomer"
+                            name="totalCustomer"
+                            value={formValue.totalCustomer}
+                            onChange={formHandle}
+                            required
+                        />
+                    </div>
+
 
 
                     <div className="col-md-6">
@@ -301,6 +358,7 @@ const AddGame = () => {
                         </div>
                     </div>
 
+                    
 
                     <div className="col-md-12">
                         <label htmlFor="description" className="form-label">
@@ -310,7 +368,7 @@ const AddGame = () => {
                     </div>
 
 
-                    <h4 className="col-12 mb-3">Review Section</h4>
+                    {/* <h4 className="col-12 mb-3">Review Section</h4>
                     <div className="col-md-6">
                         <label htmlFor="name" className="form-label">
                             Customer Name
@@ -373,7 +431,7 @@ const AddGame = () => {
                             onChange={reviewFormHandle}
                             required
                         />
-                    </div>
+                    </div> */}
 
 
 

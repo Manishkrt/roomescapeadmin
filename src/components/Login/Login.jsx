@@ -31,12 +31,12 @@ const Login = () => {
         return
       } 
       navigate('/')
-      Swal.fire({
-        title: 'Success!',
-        text: 'Login successful!',
-        icon: 'success',
-        confirmButtonText: 'Okay',
-      }) 
+      // Swal.fire({
+      //   title: 'Success!',
+      //   text: 'Login successful!',
+      //   icon: 'success',
+      //   confirmButtonText: 'Okay',
+      // }) 
     } catch (error) {
       // Show error alert
       console.log("error", error);

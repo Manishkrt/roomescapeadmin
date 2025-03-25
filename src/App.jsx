@@ -42,6 +42,10 @@ import EventList from "./pages/event/EventList";
 import EventDetails from "./pages/event/EventDetails";
 import UpdateEvent from "./pages/event/UpdateEvent";
 import Offer from "./pages/offer/Offer";
+import BlockGameList from "./pages/BlockGame/BlockGameList";
+import AddBlockGame from "./pages/BlockGame/AddBlockGame";
+import GameReview from "./pages/GameReview/GameReview";
+import AddGameReview from "./pages/GameReview/AddGameReview";
 
 function App() {
   const {
@@ -96,12 +100,12 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    GetCategories();
-    GetCategoriesType();
-    getAllBlogs();
-    getAllProjects();
-  }, []);
+  // useEffect(() => {
+  //   GetCategories();
+  //   GetCategoriesType();
+  //   getAllBlogs();
+  //   getAllProjects();
+  // }, []);
 
   return (
     <div className="app">
@@ -111,8 +115,14 @@ function App() {
           
           {/* Booking route  */}
           <Route path="/booking" element={<Booking />} />
-          <Route path="/offer" element={<Offer />} />
           <Route path="/create-booking" element={<AddBooking />} />
+
+          {/* Block game route  */}
+          <Route path="/block-game-list" element={<BlockGameList />} />
+          <Route path="/add-block-game" element={<AddBlockGame />} />
+
+          {/* offer banner  */}
+          <Route path="/offer" element={<Offer />} />
 
           
 
@@ -121,6 +131,12 @@ function App() {
           <Route path="/add-new-game" element={<AddGame />} /> 
           <Route path="/edit-game/:id" element={<EditGame />} />
           <Route path="/game-list" element={<GameList />} />
+
+
+          {/* game route  */}
+          <Route path="/add-game-review" element={<AddGameReview />} /> 
+          <Route path="/edit-game-review/:id" element={<AddGameReview />} />
+          <Route path="/game-review" element={<GameReview />} />
 
           {/* Pricing route  */}
           {/* <Route path="/Addblogs" element={<Addblogs />} />  */}
