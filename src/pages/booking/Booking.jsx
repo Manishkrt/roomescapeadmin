@@ -58,8 +58,8 @@ const Booking = () => {
     try {
         const response = await api.post('/booking/booking-by-client', bookingData)
         console.log(response);
-        if (res.data.success === true) {
-          window.location.href = res.data.data.instrumentResponse.redirectInfo.url
+        if (response.data.success === true) {
+          window.location.href = response.data.data.instrumentResponse.redirectInfo.url
         }
         
         // const response = await axios.post('http://localhost:8000/api/v1/booking/booking-by-client', bookingData)
