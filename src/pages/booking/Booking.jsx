@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Pagination from 'react-bootstrap/Pagination';
 import { Link } from 'react-router-dom';
 import { useBooking, useTimeSlot } from '../../customHook/customHook';
+import api from '../../api/api';
 
 const itemsPerPage = 4;
 
@@ -21,6 +22,27 @@ const vendorData = [
   { id: 7, active: 'Yes', Name: 'Vikram', Role: 'QAC Department', startdate: "10-11-2024", enddate: "20-12-2024", totaldays: "40 Days", EmailId: 'vikram@example.com', Phone: '7011004604' },
   { id: 8, active: 'No', Name: 'Geeta', Role: 'Account Department', startdate: "10-11-2024", enddate: "20-12-2024", totaldays: "40 Days", EmailId: 'geeta@example.com', Phone: '7011004605' },
 ];
+
+const bookingData = {
+  game: "67a77a0623623718690ea80f",
+    bookingDate: "2025-03-28",
+    timeSlot: "11:00",
+    timeSlotId : '67a3c503473caddc1c1d82a7',
+    numberOfPeople: 3,
+    totalPrice: 2400,
+    finalPrice: 2200,
+    discountPrice: 200,
+    advancePay: 1000,
+    paymentType: "online",
+    name: "John Doe",
+    email: "johndoe@gmail.com",
+    phone: "9876543210",
+    couponCode: "flat200",
+    bookingBy : "client"
+}
+
+
+
 const Booking = () => {
   // State to track the active tab
   const { setDate, singleDateBooking, loadingFetchBooking } = useBooking() 
@@ -31,6 +53,18 @@ const Booking = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const bookNowFunc = async()=>{
+    try {
+        const response = await api.post('/booking/booking-by-client', bookingData)
+        console.log(response);
+        
+        // const response = await axios.post('http://localhost:8000/api/v1/booking/booking-by-client', bookingData)
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
 
   // Calculate the number of pages
   const totalPages = Math.ceil(vendorData.length / itemsPerPage);
@@ -49,6 +83,7 @@ const Booking = () => {
   return (
     <>
       <div className="d-flex justify-content-between align-items-center flex-wrap box-shadow-common-strip p-3 mb-3">
+        <button onClick={bookNowFunc}>bookNowFunc</button>
         <h5 className='mb-0'>Booking</h5>
         {/* <Button
           style={{ backgroundColor: 'rgb(202 77 77)', border: 'none' }}
