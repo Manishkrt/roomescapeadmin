@@ -46,6 +46,7 @@ import BlockGameList from "./pages/BlockGame/BlockGameList";
 import AddBlockGame from "./pages/BlockGame/AddBlockGame";
 import GameReview from "./pages/GameReview/GameReview";
 import AddGameReview from "./pages/GameReview/AddGameReview";
+import CanceledBooking from "./pages/CanceledBooking";
 
 function App() {
   const {
@@ -134,7 +135,7 @@ function App() {
 
 
           {/* game route  */}
-          <Route path="/add-game-review" element={<AddGameReview />} /> 
+          {/* <Route path="/add-game-review" element={<AddGameReview />} />  */}
           <Route path="/edit-game-review/:id" element={<AddGameReview />} />
           <Route path="/game-review" element={<GameReview />} />
 
@@ -165,6 +166,7 @@ function App() {
           <Route path="/update-event/:eventId" element={<UpdateEvent />} />
 
 
+          <Route path="/cancel-booking" element={<CanceledBooking />} /> 
 
 
 

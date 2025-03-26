@@ -1,11 +1,12 @@
 import React, { useState, useRef } from "react";
 import { useGame } from "../../customHook/customHook";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from "../../api/api";
 
 const AddBlockGame = () => {
     const { game } = useGame();
+    const navigate = useNavigate()
     const [selectedGames, setSelectedGames] = useState([]);
     const [selectedDates, setSelectedDates] = useState([]);
     const [reason, setReason] = useState("");
@@ -57,16 +58,11 @@ const AddBlockGame = () => {
             date: selectedDates,
             game: selectedGames,
             reason,
-        };
-
-        console.log("payload", payload);
-        
-
+        }; 
         try {
-            const response = await api.post("/block-games/add", payload);
-            console.log("response", response);
-            
+            const response = await api.post("/block-games/add", payload); 
             // alert(response.data.message);
+            navigate('/block-game-list')
             setSelectedDates([]);
             setSelectedGames([]);
             setReason("");

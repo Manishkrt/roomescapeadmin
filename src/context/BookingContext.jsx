@@ -11,11 +11,14 @@ export const BookingProvider = ({children})=>{
     const [date, setDate] = useState(new Date().toISOString().split('T')[0])
     const [loadingFetchBooking, setLoadingFetchBooking] = useState(false)  
 
-    const getBookingByDate = async()=>{
-        console.log("change date");
-        
+  
+
+    const getBookingByDate = async()=>{ 
         setLoadingFetchBooking(true)
         try {
+            if(!date){
+                return
+            }
             const response = await api.post("/booking/get-by-date", {date}); 
             console.log("response find booking by date", response.data);
             setSingleDateBooking(response.data);
@@ -26,11 +29,24 @@ export const BookingProvider = ({children})=>{
             setLoadingFetchBooking(false)
         }
     }
+
+    const cancelBookingFunc = async(bookingId)=>{
+        try {
+            // console.log("booking Id", bookingId);
+            const response = await api.get(`/cancel-booking/cancel/${bookingId}`)
+            // console.log("response", response);
+            if(response.status == 200){
+                getBookingByDate()
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     useEffect(()=>{
         getBookingByDate()
     }, [date]) 
     return(
-        <BookingContext.Provider value={{singleDateBooking, loadingFetchBooking, setDate }}>
+        <BookingContext.Provider value={{singleDateBooking, loadingFetchBooking, setDate, cancelBookingFunc }}>
             {children}
         </BookingContext.Provider>
     )

@@ -94,10 +94,14 @@ const Sidebar = () => {
           </li>
           <li className="nav-item">
             <Link to="/bulk-booking" className={`Customnav-link ${location.pathname === "/bulk-booking" ? 'active' : ''}`}> 
-            {/* <i className="fa-solid fa-calendar-days"></i> */}
-            <i className="fa-solid fa-calendar-plus"></i>
-
+            <i className="fa-solid fa-calendar-plus"></i> 
               <span className="Customnav-link-text">Bulk Booking</span>
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/cancel-booking" className={`Customnav-link ${location.pathname === "/cancel-booking" ? 'active' : ''}`}> 
+            <i className="fa-solid fa-calendar-plus"></i> 
+              <span className="Customnav-link-text">Cancel Booking</span>
             </Link>
           </li>
 
@@ -174,12 +178,9 @@ const Sidebar = () => {
                 <i className="fa-solid fa-file-signature"></i>
                   <span className="Customnav-link-text"> Game Review List</span>
                 </Link>
-                <Link to="/add-game-review" className={`Customnav-link common-submenu-text ${location.pathname === "/add-game-review" ? 'active' : ''}`}>
-                {/* <i className="fas fa-file-alt"></i>  */}
-                <i className="fa-solid fa-chess-board"></i>
-
-                  <span className="Customnav-link-text">Add Game Review</span>
-                </Link>
+                {/* <Link to="/add-game-review" className={`Customnav-link common-submenu-text ${location.pathname === "/add-game-review" ? 'active' : ''}`}>
+                <i className="fa-solid fa-chess-board"></i>  <span className="Customnav-link-text">Add Game Review</span>
+                </Link> */}
              
               </li>
             </ul>

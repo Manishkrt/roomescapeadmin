@@ -42,6 +42,8 @@ const AddBooking = () => {
     const [couponMessage, setCouponMessage] = useState("")
     const [selectedTimeSlot, setselectedTimeSlot] = useState("")
 
+    const [dateErrMsg, setDateErrMsg] = useState('')
+
 
 
     const formHandle = (e) => {
@@ -95,13 +97,24 @@ const AddBooking = () => {
     };
 
     const checkTimeSlotFunc = async () => {
+        setDateErrMsg('')
         if (formValue.game && formValue.bookingDate) {
-            const response = await api.post('/booking/chek-slot-available', { game: formValue.game, bookingDate: formValue.bookingDate })
+            try { 
+                const response = await api.post('/booking/chek-slot-available', { game: formValue.game, bookingDate: formValue.bookingDate })
 
-            if (!response.status == 200) {
-                return
+                if (!response.status == 200) {
+                    return
+                }
+                setAvailableSlot(response.data.availableSlots)
+
+            } catch (error) {
+                console.log(error); 
+                if(error.status == 400){
+                    setDateErrMsg(error.response.data.message) 
+                    setAvailableSlot([])
+                    console.log("done", error.response.data.message); 
+                }
             }
-            setAvailableSlot(response.data.availableSlots)
         }
     }
     const checkPriceFunc = async () => {
@@ -198,6 +211,7 @@ const AddBooking = () => {
                         <label htmlFor="bookingDate" className="form-label">
                             Booking Date
                         </label>
+                        <small className="text-danger text-capitalize  d-block mb-0" style={{fontSize : "12px"}}>{dateErrMsg}</small>
                         <input
                             type="date"
                             className="form-control"

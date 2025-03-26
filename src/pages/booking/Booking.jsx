@@ -25,49 +25,64 @@ const vendorData = [
 
 const bookingData = {
   game: "67a77a0623623718690ea80f",
-    bookingDate: "2025-03-28",
-    timeSlot: "11:00",
-    timeSlotId : '67a3c503473caddc1c1d82a7',
-    numberOfPeople: 3,
-    totalPrice: 2400,
-    finalPrice: 2200,
-    discountPrice: 200,
-    advancePay: 1000,
-    paymentType: "online",
-    name: "John Doe",
-    email: "johndoe@gmail.com",
-    phone: "9876543210",
-    couponCode: "flat200",
-    bookingBy : "client"
+  bookingDate: "2025-03-28",
+  timeSlot: "11:00",
+  timeSlotId: '67a3c503473caddc1c1d82a7',
+  numberOfPeople: 3,
+  totalPrice: 2400,
+  finalPrice: 2200,
+  discountPrice: 200,
+  advancePay: 1000,
+  paymentType: "online",
+  name: "John Doe",
+  email: "johndoe@gmail.com",
+  phone: "9876543210",
+  couponCode: "flat200",
+  bookingBy: "client"
+}
+
+
+const bookingDataByAdminBooking = {
+  bookingBy: "admin",
+  couponCode: "flat200",
+  createdAt: "2025-03-26T07:24:51.327Z",
+  discountPrice: 200,
+  email: "ravi@testing.com",
+  finalPrice: 3050,
+  name: "ravi kumar",
+  numberOfPeople: 5,
+  paymentType: "cash",
+  phone: "1234567890",
+  totalPrice: 3250,
+  transactionId: "",
+  updatedAt: "2025-03-26T07:24:51.327Z",
 }
 
 
 
 const Booking = () => {
   // State to track the active tab
-  const { setDate, singleDateBooking, loadingFetchBooking } = useBooking() 
+  const { setDate, singleDateBooking, loadingFetchBooking, cancelBookingFunc } = useBooking()
   const { timeSlot } = useTimeSlot()
   const [activeTab, setActiveTab] = useState("link-2");
   const [show, setShow] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
+  
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const bookNowFunc = async()=>{
+  const bookNowFunc = async () => {
     try {
-        const response = await api.post('/booking/booking-by-client', bookingData)
-        console.log(response);
-        if (response.data.success === true) {
-          window.location.href = response.data.data.instrumentResponse.redirectInfo.url
-        }
-        
-        // const response = await axios.post('http://localhost:8000/api/v1/booking/booking-by-client', bookingData)
+      const response = await api.post('/booking/booking-by-client', bookingData)
+      console.log(response);
+      if (response.data.success === true) {
+        window.location.href = response.data.data.instrumentResponse.redirectInfo.url
+      }
     } catch (error) {
-        console.log(error);
-        
+      console.log(error);
     }
-}
+  }
 
   // Calculate the number of pages
   const totalPages = Math.ceil(vendorData.length / itemsPerPage);
@@ -78,11 +93,14 @@ const Booking = () => {
     currentPage * itemsPerPage
   );
 
-  const changeDateFunc = (e)=>{
+  
+
+
+  const changeDateFunc = (e) => {
     const value = e.target.value
     console.log("value", value);
     setDate(value)
-  } 
+  }
   return (
     <>
       <div className="d-flex justify-content-between align-items-center flex-wrap box-shadow-common-strip p-3 mb-3">
@@ -97,7 +115,7 @@ const Booking = () => {
         </Button> */}
         <Link to={'/create-booking'}
           className="text-white d-inline-block text-decoration-none rounded px-3 py-1 bg-escape"
-         
+
           onClick={handleShow}
         >
           <i className="fa-solid fa-clipboard-list"></i> &nbsp; Create New Booking
@@ -113,7 +131,7 @@ const Booking = () => {
 
         >
           <Nav.Item>
-            <Nav.Link eventKey="link-2"className='' >Booking Table &nbsp;<i className="fa-solid fa-clipboard-list"></i></Nav.Link>
+            <Nav.Link eventKey="link-2" className='' >Booking Table &nbsp;<i className="fa-solid fa-clipboard-list"></i></Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link eventKey="/home">Total Booking &nbsp;<i className="fa-solid fa-users"></i>
@@ -129,31 +147,12 @@ const Booking = () => {
         <div className="tab-content pt-4">
           <div className='row'>
             <div className="col-3">
-            <input
-                type="date"
-                className="form-control"
-                // placeholder="Search"
-                onChange={e=>changeDateFunc(e)}
-                // onChange={e=>setDate(e.target.value)}
-                // aria-label="Recipient's username"
-                // aria-describedby="basic-addon2"
-              />
-            {/* <div className="input-group mb-3">
               <input
                 type="date"
-                className="form-control"
-                placeholder="Search"
-                onChange={e=>setDate(e.target.value)}
-                aria-label="Recipient's username"
-                aria-describedby="basic-addon2"
-              />
-              <span className="input-group-text" id="basic-addon2">
-                <i className="fa-solid fa-magnifying-glass"></i>
-              </span>
-            </div> */}
-            </div>
-
-
+                className="form-control" 
+                onChange={e => changeDateFunc(e)} 
+              /> 
+            </div> 
           </div>
           {activeTab === "link-2" && (
             <div >
@@ -177,18 +176,33 @@ const Booking = () => {
                             <td key={timeValue._id}>
                               {/* <p>{timeValue.startTime}</p> */}
                               {/* <p>{timeValue.bookings.length}</p> */}
-                              {timeValue.bookings.length > 0 ? timeValue.bookings?.map((bookingValue, index)=>{
-                                return(
+                              {timeValue.bookings.length > 0 ? timeValue.bookings?.map((bookingValue, index) => {
+                                return (
                                   <div key={index}>
+
+                                    <div className="d-flex justify-content-between">
+                                      <p className='text-capitalize mb-1'>{bookingValue.name}</p>
+                                      <span className='border rounded-circle d-flex justify-content-center align-items-center' style={{ width: "20px", height: "20px" }}>{bookingValue.numberOfPeople}</span>
+                                    </div>
+                                    <p className='mb-0'>{bookingValue.email}</p>
+                                    <p className='mb-1'>{bookingValue.phone}</p>
+
+                                    <div className='shadow'>
+                                      <p className='mb-0'>Final Price : {bookingValue.finalPrice}</p>
+
                                       
-                                      <div className="d-flex justify-content-between">
-                                      <p className='text-capitalize'>{bookingValue.name}</p>
-                                      <span className='border rounded-circle d-flex justify-content-center align-items-center' style={{width:"20px", height: "20px"}}>{bookingValue.numberOfPeople}</span>
+                                      {bookingValue.bookingBy == "admin" ?
+                                      <span className='text-success'>Full Paid</span> 
+                                      : null}
+
+                                      <div>
+                                        <button className='btn btn-danger btn-sm  px-2 py-0' onClick={()=>cancelBookingFunc(bookingValue.bookingId)}>Cancel</button>
                                       </div>
+                                    </div>
                                   </div>
                                 )
-                              }) : 
-                              <div className='text-danger'>Null</div>
+                              }) :
+                                <div className='text-danger'>Null</div>
                               }
                             </td>
                           ))}
@@ -239,10 +253,10 @@ const Booking = () => {
                     <th>AMount</th>
                     <th>Game</th>
                     <th>Date of booking</th>
-               
+
                     <th>Email ID</th>
                     <th>Phone</th>
-                   
+
                     <th>#</th>
 
                   </tr>
