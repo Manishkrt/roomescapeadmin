@@ -101,6 +101,14 @@ const Booking = () => {
     console.log("value", value);
     setDate(value)
   }
+
+  const convertTo12HourFormat = (time) => {
+    const [hours, minutes] = time.split(":");
+    const date = new Date();
+    date.setHours(hours, minutes);
+
+    return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
+};
   return (
     <>
       <div className="d-flex justify-content-between align-items-center flex-wrap box-shadow-common-strip p-3 mb-3">
@@ -165,7 +173,7 @@ const Booking = () => {
                       <tr>
                         <td>Name Of Games</td>
                         {timeSlot.map((value) => (
-                          <th key={value.startTime}>{value.startTime}</th>
+                          <th key={value.startTime}>{convertTo12HourFormat(value.startTime)}</th>
                         ))}
 
                       </tr>
