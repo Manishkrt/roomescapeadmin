@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import api from '../../api/api'
 import Swal from 'sweetalert2'
+import { ClipLoader } from "react-spinners";
 
 const initialValue = {
     total : 0,
@@ -67,7 +68,8 @@ const EventList = () => {
         try {
             const response = await api.get(`/event`) 
             if (response.status == 200) {
-                setEvent(response.data)
+                setEvent(response.data) 
+                
             } 
         } catch (error) {
             console.log(error);
@@ -122,10 +124,14 @@ const EventList = () => {
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-
-
-                        {event.data.length > 0 ? (
+                    <tbody> 
+                        {loading ?
+                        <tr>
+                            <td colSpan={7}> 
+                                <ClipLoader color="#ED2224" size={16} loading={true} />
+                            </td>
+                        </tr>
+                         : event.data.length > 0 ? (
                             event.data.map((value) => (
                                 <tr key={value._id}>
                                     <td><Link to={`/event/${value._id}`} className='text-decoration-none text-primary'> {value.title} </Link></td>
@@ -138,7 +144,7 @@ const EventList = () => {
                                             style={{ width: "150px", objectFit: "cover", boxShadow: "5px 5px 15px rgba(0,0,0,0.3)", backgroundColor: "#FFCCCC" }}
                                         />
                                     </td> 
-                                    <td className='text-secondary'>{formatDate(value.eventDate)}</td>
+                                    <td className='text-secondary'>{formatDate(value.date)}</td>
                                     <td className='text-secondary'>{value.location}</td>
                                     <td className='text-secondary'>{convertTo12HourFormat(value.timeStart)} - {convertTo12HourFormat(value.timeEnd)}</td> 
                                     <td className='text-secondary'>{value.count} </td> 
@@ -164,7 +170,7 @@ const EventList = () => {
                             ))
                         ) : (
                             <tr className="text-center">
-                                <td colSpan={6}> Oops, there is no data </td>
+                                <td colSpan={7}> Oops, there is no data </td>
                             </tr>
                         )}
                     </tbody>

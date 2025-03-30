@@ -177,7 +177,7 @@ body {
   .submenu {
     border-left: 3px solid grey;
     list-style: none;
-    padding-left: 20px;
+    padding-left: 15px !important;
     display: flex;
     flex-direction: column;
   }
@@ -196,7 +196,7 @@ body {
   }
   
   .submenu.open {
-    max-height: 200px; /* Adjust this value based on your submenu height */
+    max-height: 400px; /* Adjust this value based on your submenu height */
   }
   i.fa-solid.fa-angle-down {
     cursor: pointer;

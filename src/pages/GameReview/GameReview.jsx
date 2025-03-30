@@ -32,6 +32,7 @@ const GameReview = () => {
     const { game } = useGame()
 
     const [reviews, setReviews] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const [show, setShow] = useState(false);
     const [showEditModel, setShowEditModel] = useState(false);
@@ -63,14 +64,21 @@ const GameReview = () => {
     }
 
     const fetchGameReview = async()=>{
+        setLoading(true)
         try {
-            const response = await api.get('/game-review/all')
-            console.log("response", response);
-            setReviews(response.data.reviews)
+            // const response = await api.get('/game-review/all')
+            // console.log("response", response);
+            // setReviews(response.data.reviews)
+            const reviewsByGame = await api.get('/game-review/game-wise')
+            console.log("reviewsByGame", reviewsByGame);
+            setReviews(reviewsByGame.data)
+            
             
         } catch (error) {
             console.log(error);
             
+        }finally{
+            setLoading(false)
         }
     }
 
@@ -177,62 +185,63 @@ const GameReview = () => {
                 </Button>
             </div>
             <div className="container mt-4">
-                <div className="row">
-                    {reviews && reviews.length > 0 ? (
-                        reviews.map((value) => (
-                            <div key={value._id} className="col-lg-4 col-md-4 col-sm-6 mb-3">
-                                <div
-                                    className="card p-3 shadow-sm text-center"
-                                    style={{
-                                        background: "white",
-                                        borderRadius: "15px",
-                                        transition: "0.3s",
-                                        color: "#fff",
-                                        boxShadow: "0 5px 10px rgba(0,0,0,0.1)",
-                                        cursor: "pointer",
-                                        border: "1px dashed #ED2224"
+                {loading ? 
+                <div className='py-5 text-center'>Loading...</div> :
+                reviews.length > 0 ?
+                reviews.map((game, index)=>(
+                    <div key={game.gameId}>
+                        <h3 className='text-capitalize'>{game.game}</h3>
+                        <div class="row">
+                            {game?.reviews.map((value)=>(
+                                 <div key={value._id} className="col-lg-4 col-md-4 col-sm-6 mb-3">
+                                 <div
+                                     className="card shadow-sm text-center"
+                                     style={{
+                                         background: "white",
+                                         borderRadius: "15px",
+                                         transition: "0.3s",
+                                         color: "#fff",
+                                         boxShadow: "0 5px 10px rgba(0,0,0,0.1)",
+                                         cursor: "pointer",
+                                         border: "1px dashed #ED2224"
+ 
+                                     }}
+                                 >
+                                     <div className="card-body">
+                                         <h5 className="fw-bold text-dark">
+                                             {/* <i className="fa-solid fa-ticket-alt"></i>  */}
+                                             {value.name}
+                                         </h5>
+                                         <p className="fw-semibold text-dark">
+                                             Rating:{value.rating} 
+                                         </p> 
+                                         <p className='text-secondary'>{value.message}</p> 
+                                         <div className="d-flex justify-content-center gap-2 mt-3">
+                                             <button
+                                                 className="btn border-dark  text-dark shadow-sm px-3 py-1 rounded-pill fw-bold"
+                                                 onClick={() => handleOpenEditModelFunc(value)}
+                                                 style={{
+                                                     color: "white", 
+                                                 }}
+                                             >
+                                                 <i className="fa-regular fa-pen-to-square text-dark"></i> Edit
+                                             </button>
+                                             <button
+                                                 className="btn border-dark text-dark shadow-sm px-3 py-1 rounded-2 fw-bold"
+                                                 onClick={(e) => handleDelete(e, value._id)}
+                                             >
+                                                 <i className="fa-solid fa-trash-can text-dark"></i> Delete
+                                             </button>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                            ))}
 
-                                    }}
-                                >
-                                    <div className="card-body">
-                                        <h5 className="fw-bold text-dark">
-                                            {/* <i className="fa-solid fa-ticket-alt"></i>  */}
-                                            {value.name}
-                                        </h5>
-                                        <p className="fw-semibold text-dark">
-                                            Rating:{value.rating} 
-                                        </p>
-                                        <p className="fw-semibold text-dark text-capitalize">
-                                            Game:{value.game.name} 
-                                        </p>
-                                        <p className='text-secondary'>{value.message}</p> 
-                                        <div className="d-flex justify-content-center gap-2 mt-3">
-                                            <button
-                                                className="btn border-dark  text-dark shadow-sm px-3 py-1 rounded-pill fw-bold"
-                                                onClick={() => handleOpenEditModelFunc(value)}
-                                                style={{
-                                                    color: "white", 
-                                                }}
-                                            >
-                                                <i className="fa-regular fa-pen-to-square text-dark"></i> Edit
-                                            </button>
-                                            <button
-                                                className="btn border-dark text-dark shadow-sm px-3 py-1 rounded-2 fw-bold"
-                                                onClick={(e) => handleDelete(e, value._id)}
-                                            >
-                                                <i className="fa-solid fa-trash-can text-dark"></i> Delete
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="col-12 text-center">
-                            <p className="alert alert-warning">No Review Available</p>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )) :
+                <div className='text-center py-5'>No Review Found</div> } 
             </div> 
 
 

@@ -13,7 +13,7 @@ export const CouponProvider = ({children})=>{
         setLoadingFetchCoupon(true)
         try {
             const response = await api.get("/coupon/all"); 
-            setCoupon(response.data);
+            setCoupon(response.data); 
         } catch (error) {
             console.log(error); 
         }
@@ -21,12 +21,25 @@ export const CouponProvider = ({children})=>{
             setLoadingFetchCoupon(false)
         }
     }
+
+    const updateCouponStatus = async(couponId, status)=>{
+        if(!couponId)return
+        try {
+            const response = await api.put(`/coupon/update-status/${couponId}` , {status}); 
+            if(response.status == 200){
+                getCouponFunc()
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
     useState(()=>{
         getCouponFunc()
     }, []) 
 
     return(
-        <CouponContext.Provider value={{coupon, loadingFetchCoupon, getCouponFunc}}>
+        <CouponContext.Provider value={{coupon, loadingFetchCoupon, getCouponFunc, updateCouponStatus}}>
             {children}
         </CouponContext.Provider>
     )

@@ -23,11 +23,11 @@ const initialData = {
 };
 
 const CouponCodePage = () => {
-    const { coupon, getCouponFunc } = useCoupon()
+    const { coupon, getCouponFunc, updateCouponStatus } = useCoupon()
     const [show, setShow] = useState(false);
     const [showEditModel, setShowEditModel] = useState(false);
 
-    const [formData, setFormData] = useState(initialData); // Form data state
+    const [formData, setFormData] = useState(initialData);
     const [err, setErr] = useState("")
     const [editFormData, setEditFormData] = useState({})
 
@@ -57,7 +57,7 @@ const CouponCodePage = () => {
         e.preventDefault();
         setErr()
         try {
-            if (!formData.discountType || !formData.coupon || !formData.discount ) {
+            if (!formData.discountType || !formData.coupon || !formData.discount) {
                 setErr("All field are required")
                 return
             }
@@ -82,7 +82,7 @@ const CouponCodePage = () => {
         e.preventDefault();
         setErr("")
         try {
-            if (  !editFormData.discountType || !editFormData.coupon || !editFormData.discount  ) {
+            if (!editFormData.discountType || !editFormData.coupon || !editFormData.discount) {
                 setErr("All field are required")
                 return
             }
@@ -135,16 +135,19 @@ const CouponCodePage = () => {
             }
         });
     };
+
+
+   
     return (
         <>
             <div className="d-flex justify-content-between flex-wrap box-shadow-common-strip p-3 mb-3">
                 <h5>Coupon Code</h5>
                 <Button
-                   
+
                     className="text-white bg-escape"
                     onClick={handleShow}
                 >
-                   <i className="fa-solid fa-ticket-simple"></i>&nbsp; Add New Coupon
+                    <i className="fa-solid fa-ticket-simple"></i>&nbsp; Add New Coupon
                 </Button>
             </div>
             {/* <div className="table-responsive type-table-wrapper">
@@ -189,66 +192,69 @@ const CouponCodePage = () => {
                 </table>
             </div> */}
 
-<div className="container mt-4">
-    {/* <h4 className="fw-bold mb-3">Coupon Codes</h4> */}
-    <div className="row">
-        {coupon && coupon.length > 0 ? (
-            coupon.map((value) => (
-                <div key={value._id} className="col-lg-4 col-md-4 col-sm-6 mb-3">
-                    <div 
-                        className="card p-3 shadow-sm text-center"
-                        style={{
-                            background: "white",
-                            borderRadius: "15px",
-                            transition: "0.3s",
-                            color: "#fff",
-                            boxShadow: "0 5px 10px rgba(0,0,0,0.1)",
-                            cursor: "pointer",
-                            border: "1px dashed #ED2224"
-
-                        }}
-                    >
-                        <div className="card-body">
-                            <h5 className="fw-bold text-dark">
-                                <i className="fa-solid fa-ticket-alt"></i> {value.coupon}
-                            </h5>
-                            <p className="fw-semibold text-dark">
-                                Discount: {value.discountType === "percentage" 
-                                    ? `${value.discount} %` 
-                                    : `₹ ${value.discount}`}
-                            </p>
-                            <span className={`badge p-2 ${value.status ? "bg-success" : "bg-danger"}`}>
-                                {value.status ? "✅ Active" : "❌ Inactive"}
-                            </span>
-                            <div className="d-flex justify-content-center gap-2 mt-3">
-                                <button 
-                                    className="btn border-dark  text-dark shadow-sm px-3 py-1 rounded-pill fw-bold"
-                                    onClick={() => handleOpenEditModelFunc(value)}
+            <div className="container mt-4"> 
+                <div className="row">
+                    {coupon && coupon.length > 0 ? (
+                        coupon.map((value) => (
+                            <div key={value._id} className="col-lg-4 col-md-4 col-sm-6 mb-3">
+                                <div
+                                    className="card p-3 shadow-sm text-center"
                                     style={{
-                                        color: "white",
-                                        // border: "2px solid #ff758c"
+                                        background: "white",
+                                        borderRadius: "15px",
+                                        transition: "0.3s",
+                                        color: "#fff",
+                                        boxShadow: "0 5px 10px rgba(0,0,0,0.1)",
+                                        cursor: "pointer",
+                                        border: "1px dashed #ED2224"
+
                                     }}
                                 >
-                                    <i className="fa-regular fa-pen-to-square text-dark"></i> Edit
-                                </button>
-                                <button 
-                                    className="btn border-dark text-dark shadow-sm px-3 py-1 rounded-2 fw-bold"
-                                    onClick={(e) => handleDelete(e, value._id)}
-                                >
-                                    <i className="fa-solid fa-trash-can text-dark"></i> Delete
-                                </button>
+                                    <div className="card-body">
+                                        <h5 className="fw-bold text-dark">
+                                            <i className="fa-solid fa-ticket-alt"></i> {value.coupon}
+                                        </h5>
+                                        <p className="fw-semibold text-dark">
+                                            Discount: {value.discountType === "percentage"
+                                                ? `${value.discount} %`
+                                                : `₹ ${value.discount}`}
+                                        </p>
+                                        <p className="fw-semibold text-dark">
+                                            Remaining Coupon : {value.totalCoupon}
+                                        </p>
+
+                                        <span className={`badge p-2 ${value.status ? "bg-success" : "bg-danger"}`} onClick={()=>updateCouponStatus(value._id, !value.status)}>
+                                            {value.status ? "✅ Active" : "❌ Inactive"}
+                                        </span> 
+                                        <div className="d-flex justify-content-center gap-2 mt-3">
+                                            <button
+                                                className="btn border-dark  text-dark shadow-sm px-3 py-1 rounded-pill fw-bold"
+                                                onClick={() => handleOpenEditModelFunc(value)}
+                                                style={{
+                                                    color: "white",
+                                                    // border: "2px solid #ff758c"
+                                                }}
+                                            >
+                                                <i className="fa-regular fa-pen-to-square text-dark"></i> Edit
+                                            </button>
+                                            <button
+                                                className="btn border-dark text-dark shadow-sm px-3 py-1 rounded-2 fw-bold"
+                                                onClick={(e) => handleDelete(e, value._id)}
+                                            >
+                                                <i className="fa-solid fa-trash-can text-dark"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                        ))
+                    ) : (
+                        <div className="col-12 text-center">
+                            <p className="alert alert-warning">No Coupons Available</p>
                         </div>
-                    </div>
+                    )}
                 </div>
-            ))
-        ) : (
-            <div className="col-12 text-center">
-                <p className="alert alert-warning">No Coupons Available</p>
             </div>
-        )}
-    </div>
-</div>
 
 
             {/* Edit Category Modal */}
@@ -291,7 +297,7 @@ const CouponCodePage = () => {
                                 required
                             />
 
-                            {/* <Form.Label>Total Coupon <span className='text-danger'>*</span></Form.Label>
+                            <Form.Label>Total Coupon <span className='text-danger'>*</span></Form.Label>
                             <Form.Control
                                 type="number"
                                 name="totalCoupon"
@@ -301,7 +307,7 @@ const CouponCodePage = () => {
                                 placeholder='enter total coupon'
                                 className='mb-3'
                                 required
-                            /> */}
+                            />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -354,7 +360,7 @@ const CouponCodePage = () => {
                                 required
                             />
 
-                            {/* <Form.Label>Total Coupon <span className='text-danger'>*</span></Form.Label>
+                            <Form.Label>Total Coupon <span className='text-danger'>*</span></Form.Label>
                             <Form.Control
                                 type="number"
                                 name="totalCoupon"
@@ -364,7 +370,7 @@ const CouponCodePage = () => {
                                 placeholder='enter total coupon'
                                 className='mb-3'
                                 required
-                            /> */}
+                            />
                         </Form.Group>
                     </Form>
                 </Modal.Body>

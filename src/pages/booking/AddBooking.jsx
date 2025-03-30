@@ -119,6 +119,7 @@ const AddBooking = () => {
     }
     const checkPriceFunc = async () => {
         if (formValue.numberOfPeople && formValue.bookingDate) {
+            setCouponMessage("")
             const response = await api.post('/booking/chek-price', { numberOfPeople: formValue.numberOfPeople, bookingDate: formValue.bookingDate, couponCode })
             if (!response.status == 200) {
                 return
@@ -131,10 +132,18 @@ const AddBooking = () => {
     }
     const applyCouponFunc = async (e) => {
         setCouponMessage("")
-        if (!formValue.numberOfPeople || !formValue.bookingDate || !formValue.couponCode) {
+        if(!formValue.couponCode){
+            Swal.fire({
+                // title: "Enter Coupon Code before apply",
+                text: "enter coupon code before apply",
+                icon: "question"
+            });
+            return
+        }
+        if (!formValue.numberOfPeople || !formValue.bookingDate) {
             Swal.fire({
                 title: "Need to fill form",
-                text: "before apply coupon please fill the form",
+                text: "Before apply coupon please fill the form",
                 icon: "question"
             });
             return
@@ -260,7 +269,7 @@ const AddBooking = () => {
                             {formValue.paymentType == "online" ?
                                 <div className="col-md-6 mb-3">
                                     <label htmlFor="transactionId" className="form-label">
-                                        Transaction
+                                        Transaction Id
                                     </label>
                                     <input
                                         type="text"
@@ -270,7 +279,7 @@ const AddBooking = () => {
                                         placeholder="Enter TransactionId"
                                         value={formValue.transactionId}
                                         onChange={(e) => formHandle(e)}
-                                        required
+                                         
                                     />
 
                                 </div> : null}
@@ -342,7 +351,7 @@ const AddBooking = () => {
 
                                         value={formValue.couponCode}
                                         onChange={(e) => formHandle(e)}
-                                        required
+                                        
                                     />
                                     <button className="btn btn-success px-4" type="button" onClick={applyCouponFunc}>
                                         Apply

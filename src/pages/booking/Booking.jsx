@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 
 import Nav from 'react-bootstrap/Nav';
@@ -9,6 +9,7 @@ import Pagination from 'react-bootstrap/Pagination';
 import { Link } from 'react-router-dom';
 import { useBooking, useTimeSlot } from '../../customHook/customHook';
 import api from '../../api/api';
+import Swal from 'sweetalert2';
 
 const itemsPerPage = 4;
 
@@ -62,39 +63,69 @@ const bookingDataByAdminBooking = {
 
 const Booking = () => {
   // State to track the active tab
-  const { setDate, singleDateBooking, loadingFetchBooking, cancelBookingFunc } = useBooking()
+  const { setDate, singleDateBooking, loadingFetchBooking, cancelBookingFunc, getBookingByDate, date, updatePlayerReachedFunc } = useBooking()
   const { timeSlot } = useTimeSlot()
-  const [activeTab, setActiveTab] = useState("link-2");
-  const [show, setShow] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [activeTab, setActiveTab] = useState("booking-table");
 
-  
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [currentPageTotalBooking, setCurrentPageTotalBooking] = useState(1);
+  const [totalPagesTotalBooking, setTotalPagesTotalBooking] = useState(1);
+  const [totalBookingNumber, setTotalBookingNumber] = useState(0)
+  const [totalBookingData, setTotalBookingData] = useState([])
+  const [totalBookingLimit, setTotalBookingLimit] = useState(20)
+  const [totalBookingLoading, setTotalBookingLoading] = useState(false)
+  const [totalBookingDate, setTotalBookingDate] = useState("")
 
-  const bookNowFunc = async () => {
-    try {
-      const response = await api.post('/booking/booking-by-client', bookingData)
-      console.log(response);
-      if (response.data.success === true) {
-        window.location.href = response.data.data.instrumentResponse.redirectInfo.url
+
+  const bookingCancelFunc = (bookingId) => {
+    Swal.fire({
+      title: "Are you sure to cancel Booking?",
+      text: "You won't be able to revert this!",
+      // icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "No",
+      confirmButtonText: "Yes, Cancel Booking!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        cancelBookingFunc(bookingId)
+        Swal.fire({
+          title: "Canceled!",
+          text: "Booking has been canceled.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
-    } catch (error) {
-      console.log(error);
-    }
+    });
   }
-
-  // Calculate the number of pages
-  const totalPages = Math.ceil(vendorData.length / itemsPerPage);
-
-  // Get the current data for the page
-  const currentData = vendorData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  
-
+  const confirmPlayerReachedFunc = (bookingId, isPlayerReached) => {
+    if (isPlayerReached) return
+    Swal.fire({
+      title: "Are you sure to Confirm Booking?",
+      text: "You won't be able to revert this! it mean Player has reached to play game and you have collect Remaining Payment.",
+      // icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      // cancelButtonText: "Cancel",
+      confirmButtonText: "Yes, Confirm!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await updatePlayerReachedFunc(bookingId)
+        if (response) {
+          Swal.fire({
+            title: "Confirmed!",
+            text: "Booking has been confirmed.",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      }
+    });
+    // updatePlayerReachedFunc(bookingId)
+  }
 
   const changeDateFunc = (e) => {
     const value = e.target.value
@@ -102,71 +133,146 @@ const Booking = () => {
     setDate(value)
   }
 
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+
+    const options = { timeZone: "Asia/Kolkata", day: "2-digit", month: "long", year: "numeric" };
+    const formattedDate = date.toLocaleDateString("en-GB", options);
+
+    const today = new Date();
+    const todayIST = new Date(today.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+
+    if (
+      date.getDate() === todayIST.getDate() &&
+      date.getMonth() === todayIST.getMonth() &&
+      date.getFullYear() === todayIST.getFullYear()
+    ) {
+      return `Today, ${formattedDate}`;
+    }
+
+    return formattedDate;
+  };
+
+
   const convertTo12HourFormat = (time) => {
     const [hours, minutes] = time.split(":");
     const date = new Date();
     date.setHours(hours, minutes);
 
     return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
-};
+  };
+
+  const isFutureOrTodayDate = (bookingDate) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset today's time for accurate comparison
+
+    const booking = new Date(bookingDate);
+    booking.setHours(0, 0, 0, 0); // Reset booking date's time
+
+    return booking >= today; // Show button only if booking date is today or in the future
+  };
+
+  const fetchDataFunc = async () => {
+    if (activeTab == "booking-table") {
+      setCurrentPageTotalBooking(1)
+      setTotalPagesTotalBooking(1)
+      setTotalBookingNumber(0)
+      setTotalBookingData([])
+      return
+    }
+    if (activeTab == "total-booking") {
+      setTotalBookingLoading(true)
+      try {
+        const response = await api.get(`/booking/all-booking?page=${currentPageTotalBooking}&limit=${totalBookingLimit}&bookingDate=${totalBookingDate}`)
+        if (response.status == 200) {
+          setCurrentPageTotalBooking(response.data.currentPage)
+          setTotalPagesTotalBooking(response.data.totalPages)
+          setTotalBookingNumber(response.data.total)
+          setTotalBookingData(response.data.data)
+        } 
+      } catch (error) {
+        console.log(error); 
+      }finally{
+        setTotalBookingLoading(false)
+      }
+      return
+    }
+    
+
+  }
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPagesTotalBooking) {
+      setCurrentPageTotalBooking(newPage);
+    }
+  };
+
+  useMemo(() => {
+    fetchDataFunc();
+  }, [currentPageTotalBooking, totalBookingLimit, activeTab, totalBookingDate]);
+
+  
+  useEffect(() => {
+    getBookingByDate()
+  }, [])
+
+  const formatDateTotalBooking = (isoDate) => {
+    const date = new Date(isoDate); 
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  };
   return (
     <>
       <div className="d-flex justify-content-between align-items-center flex-wrap box-shadow-common-strip p-3 mb-3">
-        <button onClick={bookNowFunc}>bookNowFunc</button>
+
+        <p className='mb-0'>{formatDate(date)}</p>
         <h5 className='mb-0'>Booking</h5>
-        {/* <Button
-          style={{ backgroundColor: 'rgb(202 77 77)', border: 'none' }}
-          className="text-white"
-          onClick={handleShow}
-        >
-          <i className="fas fa-layer-group"></i> Add New Holiday
-        </Button> */}
+
         <Link to={'/create-booking'}
           className="text-white d-inline-block text-decoration-none rounded px-3 py-1 bg-escape"
-
-          onClick={handleShow}
         >
           <i className="fa-solid fa-clipboard-list"></i> &nbsp; Create New Booking
         </Link>
       </div>
       <div className=" container Main-leaves-wrapper ">
-        {/* Navigation Tabs */}
         <Nav
-          // justify
           variant="tabs"
           activeKey={activeTab}
-          onSelect={(selectedKey) => setActiveTab(selectedKey)} // Update active tab
-
+          onSelect={(selectedKey) => setActiveTab(selectedKey)}
         >
           <Nav.Item>
-            <Nav.Link eventKey="link-2" className='' >Booking Table &nbsp;<i className="fa-solid fa-clipboard-list"></i></Nav.Link>
+            <Nav.Link eventKey="booking-table" className='' >Booking Table &nbsp;<i className="fa-solid fa-clipboard-list"></i></Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link eventKey="/home">Total Booking &nbsp;<i className="fa-solid fa-users"></i>
+            <Nav.Link eventKey="total-booking">Total Booking &nbsp;<i className="fa-solid fa-users"></i>
             </Nav.Link>
           </Nav.Item>
           {/* <Nav.Item>
-            <Nav.Link eventKey="link-1">Pending Leaves <i className="fa-solid fa-hourglass-half"></i></Nav.Link>
+            <Nav.Link eventKey="total-bookingByDate">Booking Date Wise <i className="fa-solid fa-hourglass-half"></i></Nav.Link>
           </Nav.Item> */}
-
         </Nav>
 
         {/* Tab Content */}
         <div className="tab-content pt-4">
-          <div className='row'>
-            <div className="col-3">
-              <input
-                type="date"
-                className="form-control" 
-                onChange={e => changeDateFunc(e)} 
-              /> 
-            </div> 
-          </div>
-          {activeTab === "link-2" && (
+
+          {activeTab === "booking-table" && (
             <div >
+              <div className='row'>
+                <div className="col-3">
+                  <input
+                    type="date"
+                    className="form-control"
+                    onChange={e => changeDateFunc(e)}
+                    onKeyDown={(e) => e.preventDefault()}
+                    onClick={(e) => e.target.showPicker()}
+                  />
+                </div>
+              </div>
               {singleDateBooking?.length > 0 ?
                 <div className='table-responsive'>
-                  {/* {singleDateBooking.map((gameValue)=>)} */}
                   <table className='table table-bordered'>
                     <tbody>
 
@@ -182,8 +288,6 @@ const Booking = () => {
                           <th className='text-capitalize'>{gameValue.name}</th>
                           {gameValue.timeSlots.map((timeValue) => (
                             <td key={timeValue._id}>
-                              {/* <p>{timeValue.startTime}</p> */}
-                              {/* <p>{timeValue.bookings.length}</p> */}
                               {timeValue.bookings.length > 0 ? timeValue.bookings?.map((bookingValue, index) => {
                                 return (
                                   <div key={index}>
@@ -195,17 +299,37 @@ const Booking = () => {
                                     <p className='mb-0'>{bookingValue.email}</p>
                                     <p className='mb-1'>{bookingValue.phone}</p>
 
-                                    <div className='shadow'>
+                                    <div className=''>
                                       <p className='mb-0'>Final Price : {bookingValue.finalPrice}</p>
 
-                                      
                                       {bookingValue.bookingBy == "admin" ?
-                                      <span className='text-success'>Full Paid</span> 
-                                      : null}
-
+                                        <span className='text-success'>Full Paid</span>
+                                        :
+                                        <div>
+                                          <p className='mb-0'>Advance Pay : {bookingValue.advancePay}</p>
+                                          <p className='mb-0'>  {bookingValue.finalPrice > bookingValue.advancePay ?
+                                            <p className='mb-0'> Remaining :
+                                              <span className='text-danger'>{bookingValue.finalPrice - bookingValue.advancePay}</span>
+                                            </p> :
+                                            <span className='text-success'>Full Paid</span>}
+                                          </p>
+                                        </div>
+                                      }
                                       <div>
-                                        <button className='btn btn-danger btn-sm  px-2 py-0' onClick={()=>cancelBookingFunc(bookingValue.bookingId)}>Cancel</button>
+                                        <span
+                                          className={`switch-button rounded-pill border-secondary border ${bookingValue.playerReached ? "active" : ""}`}
+                                          disabled={bookingValue.playerReached}
+                                          onClick={() => confirmPlayerReachedFunc(bookingValue.bookingId, bookingValue.playerReached)}
+                                        />
                                       </div>
+
+                                      {!bookingValue.playerReached && isFutureOrTodayDate(date) && (
+                                        <div>
+                                          <button className='btn btn-danger btn-sm px-2 py-0' disabled={bookingValue.playerReached} onClick={() => bookingCancelFunc(bookingValue.bookingId)}>
+                                            Cancel
+                                          </button>
+                                        </div>
+                                      )}
                                     </div>
                                   </div>
                                 )
@@ -223,29 +347,35 @@ const Booking = () => {
                 <div>No Booking Found</div>}
             </div>
           )}
-          {activeTab === "/home" && (
+          {activeTab === "total-booking" && (
             <div>
-              <div className="container mt-2">
-                <div className="row p-0">
-                  <div className="col-lg-3 p-0">
-                    <div className="mb-3">
-                      {/* <div className="input-group mb-3">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Search"
-                          aria-label="Recipient's username"
-                          aria-describedby="basic-addon2"
-                        />
-                        <span className="input-group-text" id="basic-addon2">
-                          <i className="fa-solid fa-magnifying-glass"></i>
-                        </span>
-                      </div> */}
+              <div className='row justify-content-between mb-3 '>
+                <div className="col-3">
+                  <input
+                    type="date"
+                    className="form-control"
+                    value={totalBookingDate}
+                    onChange={(e) => setTotalBookingDate(e.target.value)}
+                    onKeyDown={(e) => e.preventDefault()}
+                    onClick={(e) => e.target.showPicker()}
+                  />
+                  {totalBookingDate ? 
+                  <button className='btn btn-danger' onClick={()=>setTotalBookingDate("")}>Reset Date</button> : null }
 
-
-                    </div>
-                  </div>
                 </div>
+                <p className=' col-6 text-end mb-0'>
+                  Total Booking : {totalBookingNumber}
+                  <span>
+                    <select value={totalBookingLimit} onChange={e => setTotalBookingLimit(e.target.value)}>
+                      
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                      <option value="30">30</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+                  </span>
+                </p>
               </div>
 
 
@@ -253,58 +383,79 @@ const Booking = () => {
 
                 <thead className='text-center'>
                   <tr>
-                    <th> Id</th>
-
-                    <th>Name</th>
-                    <th>phone</th>
-                    <th>Email</th>
-                    <th>AMount</th>
+                    <th> Booking Date</th>
                     <th>Game</th>
-                    <th>Date of booking</th>
+                    <th>Time Slot</th>
+                    <th>Name</th>
+                    <th>Phone No.</th>
+                    <th>Total Player</th>
+                    <th>FinalPrice</th>
+                    <th>Advance Pay</th>
+                    <th>bookingBy</th>
 
-                    <th>Email ID</th>
-                    <th>Phone</th>
-
-                    <th>#</th>
+                    
 
                   </tr>
                 </thead>
-                {/* <tbody className='text-center'>
-                  {currentData.map((vendor) => (
-                    <tr key={vendor.id}>
-                      <td>{vendor.id}</td>
-
-                      <td>{vendor.Name}</td>
-                      <td>{vendor.Role}</td>
-                      <td>{vendor.startdate}</td>
-                      <td>{vendor.enddate}</td>
-                      <td>{vendor.totaldays}</td>
-                      <td>{vendor.EmailId}</td>
-                      <td>{vendor.Phone}</td>
-
-                      <td>
-                        <Form>
-                          <Form.Check
-                            type="switch"
-                            id={`custom-switch-${vendor.id}`}
-                            checked={vendor.active === 'Yes'}
-                            readOnly
-                            className={vendor.active === 'Yes' ? 'switch-active' : 'switch-inactive'}
-                          />
-                        </Form>
-                      </td>
-                      <td>
-                        <i className="fa-regular fa-pen-to-square"></i>&nbsp;&nbsp;
-                        <i className="fa-solid fa-trash-can-arrow-up"></i>
-                      </td>
+                <tbody className='text-center'>
+                  {totalBookingLoading ? 
+                  <tr>
+                    <td colSpan={9}>Loading</td>
+                  </tr> : 
+                  totalBookingData.length > 0 ? 
+                  totalBookingData.map((value) => (
+                    <tr key={value._id}>
+                      <td>{formatDateTotalBooking(value.bookingDate)}</td>
+                      <td className='text-capitalize'>{value?.game?.name}</td> 
+                      <td>{convertTo12HourFormat(value.timeSlot)}</td>
+                      <td className='text-capitalize'>{value.name}</td>
+                      <td>{value.phone}</td>
+                      <td>{value.numberOfPeople}</td>
+                      <td>{value.finalPrice}</td>
+                      <td>{value.advancePay ? value.advancePay : "-"}</td>
+                      <td>{value.bookingBy == "admin" ? "Admin Pannel" : "Website"}</td>
                     </tr>
-                  ))}
-                </tbody> */}
+                  )) :
+                  <tr>
+                    <td colSpan={9}>No Data Found</td>
+                  </tr>
+                }
+                </tbody>
               </Table>
+
+              {totalPagesTotalBooking > 1 ?
+                <div className="d-flex justify-content-center mt-3">
+                  <button
+                    className="btn btn-primary me-2"
+                    disabled={currentPageTotalBooking === 1 || totalBookingLoading}
+                    onClick={() => handlePageChange(currentPageTotalBooking - 1)}
+                  >
+                    Previous
+                  </button>
+                  <span className="align-self-center">Page {currentPageTotalBooking} of {totalPagesTotalBooking}</span>
+                  <button
+                    className="btn btn-primary ms-2"
+                    disabled={currentPageTotalBooking === totalPagesTotalBooking || totalBookingLoading}
+                    onClick={() => handlePageChange(currentPageTotalBooking + 1)}
+                  >
+                    Next
+                  </button>
+                </div> : null}
             </div>
           )}
-          {activeTab === "link-1" && (
+          {activeTab === "total-bookingByDate" && (
             <div>
+              <div className='row'>
+                <div className="col-3">
+                  <input
+                    type="date"
+                    className="form-control"
+                    onChange={e => changeDateFunc(e)}
+                    onKeyDown={(e) => e.preventDefault()}
+                    onClick={(e) => e.target.showPicker()}
+                  />
+                </div>
+              </div>
               <h3>Loooonger NavLink Content</h3>
               <p>This is the content for the Loooonger NavLink tab.</p>
             </div>
